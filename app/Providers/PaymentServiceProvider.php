@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Core\Domain\Application\Payments\PaymentFactory;
 use Core\Domain\Enterprise\Enums\PaymentMethods;
 use Core\Domain\Enterprise\Entities\CreditCardPayment;
+use Core\Domain\Enterprise\Entities\BoletoPayment;
 use InvalidArgumentException;
 
 class PaymentServiceProvider extends ServiceProvider
@@ -33,6 +34,12 @@ class PaymentServiceProvider extends ServiceProvider
                 creditCard: $data->creditCard,
                 creditCardHolderInfo: $data->creditCardHolderInfo,
                 remoteIp: $data->remoteIp,
+            );
+        });
+
+        PaymentFactory::registerPaymentMethod(PaymentMethods::BOLETO->value, function ($data) {
+            return new BoletoPayment(
+                payment: $data->payment,
             );
         });
     }

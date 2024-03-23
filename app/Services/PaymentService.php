@@ -24,20 +24,26 @@ class PaymentService implements PaymentProcessor
 
         $payment = PaymentFactory::createPayment($paymentMethod, $details);
        // dd($payment->getHolderInfo());
-        $response = Http::withHeaders([
-            'accept' => 'application/json',
-            'content-type' => 'application/json',
-            'access_token' => Config::get('services.asaas.token')
-        ])->post("$apiUrl/payments", [
+
+        $requestAttributes = [
             'customer' => $payment->customerId,
             'billingType' => $paymentMethod->value,
             'value' => $payment->value,
             'dueDate' => $payment->dueDate,
             'description' => 'Pagamento de fatura',
-            'remoteIp' => $payment->remoteIp,
-            'creditCard' => $payment->getCreditCard(),
-            'creditCardHolderInfo' => $payment->getHolderInfo()
-        ]);
+        ];
+
+        if($paymentMethod->value == PaymentMethods::CREDIT_CARD->value) {
+            $requestAttributes['creditCard'] = $payment->getCreditCard();
+            $requestAttributes['creditCardHolderInfo'] = $payment->getHolderInfo();
+            $requestAttributes['remoteIp'] = $payment->remoteIp;
+        }
+
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'content-type' => 'application/json',
+            'access_token' => Config::get('services.asaas.token')
+        ])->post("$apiUrl/payments", $requestAttributes);
 
         return $response->object();
 
