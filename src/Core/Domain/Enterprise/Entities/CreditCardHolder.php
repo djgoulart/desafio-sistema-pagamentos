@@ -1,9 +1,10 @@
 <?php
 
-namespace Core\Domain\Enterprise\ValueObjects;
+namespace Core\Domain\Enterprise\Entities;
 
 use Core\Domain\Enterprise\Validation\EntityValidation;
 use Core\Domain\Enterprise\ValueObjects\CpfCnpj;
+use Core\Domain\Enterprise\Exceptions\EntityValidationException;
 
 class CreditCardHolder {
     public function __construct(

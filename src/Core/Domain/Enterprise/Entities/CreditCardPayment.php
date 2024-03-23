@@ -9,6 +9,8 @@ use Core\Domain\Enterprise\Enums\PaymentStatus;
 use Core\Domain\Enterprise\ValueObjects\CreditCard;
 use Core\Domain\Enterprise\Dtos\PaymentDto;
 use Core\Domain\Enterprise\Dtos\CreditCardDto;
+use Core\Domain\Enterprise\Dtos\CreditCardHolderInfoDto;
+use Core\Domain\Enterprise\Entities\CreditCardHolder;
 use Datetime;
 
 class CreditCardPayment extends Payment
@@ -16,7 +18,7 @@ class CreditCardPayment extends Payment
     public function __construct(
         protected PaymentDto $payment,
         protected CreditCard | CreditCardDto $creditCard,
-        protected CreditCardHolderDto $creditCardHolderInfo,
+        protected CreditCardHolderInfoDto | CreditCardHolder $creditCardHolderInfo,
         protected string $remoteIp = '',
     ) {
         parent::__construct(paymentAttributes: $payment);
@@ -33,7 +35,7 @@ class CreditCardPayment extends Payment
             $this->creditCard = $creditCard;
         }
 
-        if($creditCardHolderInfo instanceof CreditCardHolderDto) {
+        if($creditCardHolderInfo instanceof CreditCardHolderInfoDto) {
             $this->creditCardHolderInfo = new CreditCardHolder(
                 name: $creditCardHolderInfo->name,
                 email: $creditCardHolderInfo->email,

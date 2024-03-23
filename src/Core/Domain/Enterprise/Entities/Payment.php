@@ -41,7 +41,7 @@ abstract class Payment
 
     protected function validate()
     {
-        EntityValidation::notNull($this->customerId);
+        EntityValidation::notNull($this->customerId, "CustomerID is required");
         PaymentValidation::validateValue($this->value);
         PaymentValidation::validateDueDate($this->dueDate);
     }
