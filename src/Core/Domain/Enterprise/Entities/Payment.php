@@ -9,6 +9,7 @@ use Core\Domain\Enterprise\Validation\PaymentValidation;
 use Core\Domain\Enterprise\Enums\PaymentStatus;
 use Core\Domain\Enterprise\Contracts\Transaction;
 use Core\Domain\Enterprise\Dtos\PaymentDto;
+use Core\Domain\Enterprise\Dtos\PaymentUpdateDto;
 use Datetime;
 use Exception;
 
@@ -23,6 +24,8 @@ abstract class Payment
     protected $dueDate;
     protected $description;
     protected $status;
+    protected $invoiceUrl;
+    protected $transactionReceiptUrl;
     protected $createdAt;
 
     public function __construct(PaymentDto $paymentAttributes)
@@ -34,9 +37,43 @@ abstract class Payment
         $this->dueDate = $paymentAttributes->dueDate ? $paymentAttributes->dueDate : new DateTime();
         $this->description = $paymentAttributes->description;
         $this->status = $paymentAttributes->status ? $paymentAttributes->status : PaymentStatus::PENDING;
+        $this->invoiceUrl = $paymentAttributes->invoiceUrl;
+        $this->transactionReceiptUrl = $paymentAttributes->transactionReceiptUrl;
         $this->createdAt = $paymentAttributes->createdAt ? $paymentAttributes->createdAt : new DateTime();
 
         $this->validate();
+    }
+
+    public function updatePaymentDetails(PaymentUpdateDto $updateData)
+    {
+        if (!PaymentStatus::tryFrom($updateData->status)) {
+            throw new Exception("Invalid payment status provided.");
+        }
+
+        if(!empty($this->extenalId)) {
+            throw new Exception("Payment already processed.");
+        }
+
+        $this->status = $updateData->status;
+        $this->externalId = $updateData->externalId;
+        $this->invoiceUrl = $updateData->invoiceUrl;
+        $this->transactionReceiptUrl = $updateData->transactionReceiptUrl;
+    }
+
+    public function getData()
+    {
+        return [
+            'id' => $this->id,
+            'customerId' => $this->customerId,
+            'externalId' => $this->externalId,
+            'value' => $this->value,
+            'dueDate' => $this->dueDate,
+            'description' => $this->description,
+            'status' => $this->status,
+            'invoiceUrl' => $this->invoiceUrl,
+            'transactionReceiptUrl' => $this->transactionReceiptUrl,
+            'createdAt' => $this->createdAt
+        ];
     }
 
     protected function validate()

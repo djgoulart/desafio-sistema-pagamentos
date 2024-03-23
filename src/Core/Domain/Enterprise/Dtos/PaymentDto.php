@@ -14,6 +14,8 @@ class PaymentDto {
         public string|DateTime|null $dueDate = null,
         public ?string $description = null,
         public ?PaymentStatus $status = null,
+        public ?string $invoiceUrl = null,
+        public ?string $transactionReceiptUrl = null,
         public string|DateTime|null $createdAt = null,
     ) {}
 }
