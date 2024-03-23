@@ -4,7 +4,7 @@ namespace Core\Domain\Application\Contracts;
 
 use Core\Domain\Enterprise\Dtos\CustomerDto;
 
-interface Customer
+interface CustomerContract
 {
     /**
      * Create a Customer.

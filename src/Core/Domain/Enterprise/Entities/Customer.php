@@ -33,11 +33,11 @@ class Customer
     public function getData()
     {
         return [
-            'id' => $this->id,
+            'id' => (string)$this->id,
             'externalId' => $this->externalId,
             'name' => $this->name,
             'cpfCnpj' => (string)$this->cpfCnpj,
-            'createdAt' => $this->createdAt,
+            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
         ];
     }
 
