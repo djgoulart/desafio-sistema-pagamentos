@@ -4,40 +4,39 @@ namespace Tests\Unit\Core\Domain\Enterprise\Entities;
 
 use PHPUnit\Framework\TestCase;
 use Core\Domain\Enterprise\Entities\Customer;
+use Core\Domain\Enterprise\Dtos\CustomerDto;
 use Ramsey\Uuid\Uuid;
 
 class CustomerTest extends TestCase
 {
+    private function createCustomerData(): CustomerDto {
+        return new CustomerDto(
+            name: 'John Doe',
+            cpfCnpj: '501.141.080-30',
+        );
+    }
 
     public function test_customer_attributes_are_correct(): void
     {
-        $customer = new Customer(
-            name: 'John Doe',
-            cpfCnpj: '12345678901'
-        );
+        $sut = new Customer(customerData: $this->createCustomerData());
+        $customer = $sut->getData();
 
-        $this->assertNotEmpty($customer->createdAt());
-        $this->assertNotEmpty($customer->id());
-        $this->assertEquals('John Doe', $customer->name);
-        $this->assertEquals('12345678901', $customer->cpfCnpj);
+        $this->assertNotEmpty($customer['createdAt']);
+        $this->assertNotEmpty($customer['id']);
+        $this->assertEquals('John Doe', $customer['name']);
+        $this->assertEquals('50114108030', $customer['cpfCnpj']);
     }
 
     public function test_customer_data_can_be_edited(): void
     {
-        $uuid = (string) Uuid::uuid4()->toString();
+        $sut = new Customer($this->createCustomerData());
 
-        $customer = new Customer(
-            id: $uuid,
-            name: 'John Doe',
-            cpfCnpj: '12345678901',
-            createdAt: '2024-10-10 10:10:10'
-        );
-
-        $customer->update(
+        $sut->update(
             name: 'John Doe Updated',
         );
 
-        $this->assertEquals($uuid, $customer->id());
-        $this->assertEquals('John Doe Updated', $customer->name);
+        $customer = $sut->getData();
+
+        $this->assertEquals('John Doe Updated', $customer['name']);
     }
 }

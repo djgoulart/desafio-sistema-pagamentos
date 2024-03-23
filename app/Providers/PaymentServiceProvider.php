@@ -7,6 +7,7 @@ use Core\Domain\Application\Payments\PaymentFactory;
 use Core\Domain\Enterprise\Enums\PaymentMethods;
 use Core\Domain\Enterprise\Entities\CreditCardPayment;
 use Core\Domain\Enterprise\Entities\BoletoPayment;
+use Core\Domain\Enterprise\Entities\PixPayment;
 use InvalidArgumentException;
 
 class PaymentServiceProvider extends ServiceProvider
@@ -39,6 +40,12 @@ class PaymentServiceProvider extends ServiceProvider
 
         PaymentFactory::registerPaymentMethod(PaymentMethods::BOLETO->value, function ($data) {
             return new BoletoPayment(
+                payment: $data->payment,
+            );
+        });
+
+        PaymentFactory::registerPaymentMethod(PaymentMethods::PIX->value, function ($data) {
+            return new PixPayment(
                 payment: $data->payment,
             );
         });
