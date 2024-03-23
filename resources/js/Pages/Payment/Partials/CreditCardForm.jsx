@@ -5,6 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import { useForm } from '@inertiajs/react';
 import TextInput from '@/Components/TextInput';
 import CreditCardInput from '@/Components/CreditCardInput';
+import PostalCodeInput from '@/Components/PostalCodeInput';
 
 export default function CreditCardForm() {
     const paymentMethod = route().params.paymentMethod;
@@ -37,7 +38,7 @@ export default function CreditCardForm() {
         post(route('payment.store'));
     };
 
-    useEffect(() => { console.log(data.cardNumber) }, [data.cardNumber]);
+    // useEffect(() => { console.log(data.cardNumber) }, [data.cardNumber]);
 
     return (
         <form onSubmit={submit} className='flex flex-col gap-4'>
@@ -199,7 +200,7 @@ export default function CreditCardForm() {
             {/* Holder Info Postal Code */}
             <div className='flex flex-col gap-2'>
                 <InputLabel htmlFor="holderInfoPostalCode" value="CEP" />
-                <TextInput
+                <PostalCodeInput
                     id="holderInfoPostalCode"
                     name="holderInfoPostalCode"
                     type="text"
