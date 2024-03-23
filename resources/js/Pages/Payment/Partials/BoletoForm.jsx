@@ -21,7 +21,7 @@ export default function BoletoForm() {
 
         setData('paymentMethod', paymentMethod);
         console.log(data);
-        post(route('payment.store'));
+        post(route('payment.pay.boleto'));
     };
 
     useEffect(() => { console.log(errors) }, [errors]);

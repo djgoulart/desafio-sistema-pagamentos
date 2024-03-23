@@ -35,7 +35,7 @@ export default function CreditCardForm() {
 
         setData('paymentMethod', paymentMethod);
         console.log(data);
-        post(route('payment.store'));
+        post(route('payment.pay.credit-card'));
     };
 
     // useEffect(() => { console.log(data.cardNumber) }, [data.cardNumber]);
