@@ -5,6 +5,9 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { Head, Link, useForm } from '@inertiajs/react';
 import TextInput from '@/Components/TextInput';
+import BoletoForm from './Partials/BoletoForm';
+import PixForm from './Partials/PixForm';
+import CreditCardForm from './Partials/CreditCardForm';
 
 export default function Register() {
     const paymentMethod = route().params.paymentMethod;
@@ -31,8 +34,8 @@ export default function Register() {
         <GuestLayout>
             <Head title="Register Payment" />
 
-            <form onSubmit={submit} className='flex flex-col gap-4'>
-                <TextInput name={"paymentMethod"} type={"hidden"} value={'OUTRO'} />
+            <div className='flex flex-col gap-4'>
+                <h1>Selecione um método de pagamento</h1>
                 <div className='flex gap-4 items-center'>
                     <Link
                         href={route('payment.register', { paymentMethod: 'CREDIT_CARD' })}
@@ -53,41 +56,12 @@ export default function Register() {
                         Pix
                     </Link>
                 </div>
-                <div className='flex flex-col gap-2'>
-                    <InputLabel htmlFor="value" value="Value" />
-                    <TextInput
-                        id="value"
-                        name="value"
-                        type={"text"}
-                        value={data.value}
-                        onChange={(e) => setData('value', e.target.value)} />
 
-                    <InputError message={errors.value} className="mt-2" />
-                </div>
-                <div className='flex flex-col gap-2'>
-                    <InputLabel htmlFor="date" value="Date" />
-                    <TextInput
-                        id="date"
-                        name="date"
-                        type={"date"}
-                        value={data.date}
-                        onChange={(e) => setData('date', e.target.value)}
-                        disabled
-                        className={"disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"}
-                    />
+                {paymentMethod === 'BOLETO' && (<BoletoForm />)}
+                {paymentMethod === 'PIX' && (<PixForm />)}
+                {paymentMethod === 'CREDIT_CARD' && (<CreditCardForm />)}
+            </div>
 
-                    <InputError message={errors.date} className="mt-2" />
-                </div>
-
-
-                <div className="flex items-center justify-end mt-4">
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Register
-                    </PrimaryButton>
-                </div>
-                <InputError message={errors.paymentMethod} className="mt-2" />
-            </form>
         </GuestLayout>
     );
 }
