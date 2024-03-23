@@ -10,33 +10,19 @@ use InvalidArgumentException;
 
 class PaymentFactory
 {
+    protected static $methodMap = [];
+
+    public static function registerPaymentMethod(string $method, callable $constructor): void
+    {
+        self::$methodMap[$method] = $constructor;
+    }
+
     public static function createPayment(PaymentMethods $type, PaymentDetailsDto $data): Payment
     {
-        if(!$type) {
-            throw new InvalidArgumentException('Payment method is required');
+        if (!isset(self::$methodMap[$type->value])) {
+            throw new InvalidArgumentException('Invalid payment method');
         }
 
-        if(!$data->payment) {
-            throw new InvalidArgumentException('Payment data is required');
-        }
-
-        switch ($type) {
-            case PaymentMethods::CREDIT_CARD:
-                if(!$data->creditCard) {
-                    throw new InvalidArgumentException('Credit card data is required');
-                }
-
-                if(!$data->remoteIp) {
-                    throw new InvalidArgumentException('Remote IP is required');
-                }
-
-                return new CreditCardPayment(
-                    payment: $data->payment,
-                    creditCard: $data->creditCard,
-                    remoteIp: $data->remoteIp,
-                );
-            default:
-                throw new InvalidArgumentException('Invalid payment method');
-        }
+        return call_user_func(self::$methodMap[$type->value], $data);
     }
 }

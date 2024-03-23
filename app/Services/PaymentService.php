@@ -23,7 +23,7 @@ class PaymentService implements PaymentProcessor
         $paymentMethod = PaymentMethods::from($method);
 
         $payment = PaymentFactory::createPayment($paymentMethod, $details);
-        //dd($payment->getCreditCard());
+       // dd($payment->getHolderInfo());
         $response = Http::withHeaders([
             'accept' => 'application/json',
             'content-type' => 'application/json',
@@ -36,24 +36,13 @@ class PaymentService implements PaymentProcessor
             'description' => 'Pagamento de fatura',
             'remoteIp' => $payment->remoteIp,
             'creditCard' => $payment->getCreditCard(),
-            'creditCardHolderInfo' => [
-                'name' => 'John Doe',
-                'cpfCnpj' => '24971563792',
-                'postalCode' => '89223-005',
-                'addressNumber' => '277',
-                'email' => 'john.doe@asaas.com.br',
-                'phone' => '4738010919',
-            ]
+            'creditCardHolderInfo' => $payment->getHolderInfo()
         ]);
 
         return $response->object();
 
         // Aqui, você pode adicionar mais lógica como salvar o pagamento no banco de dados,
         // enviar notificações, etc., dependendo dos requisitos da sua aplicação.
-        /* 'holderName' => $payment->creditCard->holderName,
-                'number' => '5162306219378829',
-                'expiryMonth' => '05',
-                'expiryYear' => '2025',
-                'ccv' => '123' */
+
     }
 }

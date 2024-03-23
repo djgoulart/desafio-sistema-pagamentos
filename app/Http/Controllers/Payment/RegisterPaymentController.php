@@ -20,7 +20,7 @@ use Core\Domain\Enterprise\Enums\PaymentMethods;
 use Core\Domain\Enterprise\Dtos\PaymentDetailsDto;
 use Core\Domain\Enterprise\Dtos\PaymentDto;
 use Core\Domain\Enterprise\Dtos\CreditCardDto;
-
+use Core\Domain\Enterprise\Dtos\CreditCardHolderInfoDto;
 
 class RegisterPaymentController extends Controller
 {
@@ -58,9 +58,19 @@ class RegisterPaymentController extends Controller
             ccv: '123',
         );
 
+        $creditCardHolderInfo = new CreditCardHolderInfoDto(
+            name: 'John Doe',
+            cpfCnpj: '24971563792',
+            postalCode: '89223-005',
+            addressNumber: '277',
+            email: 'john.doe@asaas.com.br',
+            phone: '4738010919',
+        );
+
         $paymentDetails = new PaymentDetailsDto(
             payment: $payment,
             creditCard: $creditCard,
+            creditCardHolderInfo: $creditCardHolderInfo,
             remoteIp: $request->ip(),
         );
 

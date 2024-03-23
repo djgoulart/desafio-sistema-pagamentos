@@ -58,6 +58,10 @@ class CreditCardPayment extends Payment
         return $this->creditCard->getData();
     }
 
+    public function getHolderInfo()
+    {
+        return $this->creditCardHolderInfo->getData();
+    }
 
     protected function validate()
     {
