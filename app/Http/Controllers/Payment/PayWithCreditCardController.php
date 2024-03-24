@@ -4,16 +4,18 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePaymentRequest;
-use Core\Domain\Application\Contracts\PaymentProcessor;
 use Core\Domain\Application\Contracts\CustomerContract;
-use Core\Domain\Enterprise\Dtos\CustomerDto;
-use Core\Domain\Enterprise\Dtos\PaymentDto;
+use Core\Domain\Application\Contracts\PaymentProcessor;
 use Core\Domain\Enterprise\Dtos\CreditCardDto;
 use Core\Domain\Enterprise\Dtos\CreditCardHolderInfoDto;
+use Core\Domain\Enterprise\Dtos\CustomerDto;
 use Core\Domain\Enterprise\Dtos\PaymentDetailsDto;
+use Core\Domain\Enterprise\Dtos\PaymentDto;
 use Core\Domain\Enterprise\Enums\PaymentMethods;
-use Illuminate\Http\Request;
+use Core\Domain\Enterprise\Entities\Payment;
 use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PayWithCreditCardController extends Controller
 {
@@ -27,8 +29,6 @@ class PayWithCreditCardController extends Controller
 
     public function handle(StorePaymentRequest $request): RedirectResponse
     {
-        //dd($request->all());
-
         $customerData = new CustomerDto(
             name: $request->input('customerName'),
             cpfCnpj: $request->input('customerCpfCnpj'),
@@ -40,11 +40,9 @@ class PayWithCreditCardController extends Controller
             return redirect(route('payment.register'))->with('error', 'Failed to create customer');
         }
 
-
-
         $paymentMethod = PaymentMethods::from($request->input('paymentMethod'));
 
-        $payment = new PaymentDto(
+        $paymentData = new PaymentDto(
             customerId: $customer['externalId'],
             value: $request->input('value'),
             dueDate: $request->input('dueDate'),
@@ -69,17 +67,31 @@ class PayWithCreditCardController extends Controller
         );
 
         $paymentDetails = new PaymentDetailsDto(
-            payment: $payment,
+            payment: $paymentData,
             creditCard: $creditCard,
             creditCardHolderInfo: $creditCardHolderInfo,
             remoteIp: $request->ip(),
         );
 
-        $resp = $this->paymentProcessor->processPayment($request->input('paymentMethod'), $paymentDetails);
+        $payment = $this->paymentProcessor->processPayment(
+            $request->input('paymentMethod'),
+            $paymentDetails
+        );
 
-        dd($resp);
+        if(!$payment) {
+            return redirect(route('payment.register'))->with('error', 'Failed to process payment');
+        }
 
+        //$resultData = $payment->getData();
 
-        return redirect(route('payment.register'));
+        return redirect()->route('payment.pay.credit-card.result', [
+            'payment' => $payment
+        ]);
+
+    }
+
+    public function result(): Response
+    {
+        return Inertia::render('Payment/CreditCardResult');
     }
 }
