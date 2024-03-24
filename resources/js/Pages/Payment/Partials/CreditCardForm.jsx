@@ -29,16 +29,13 @@ export default function CreditCardForm() {
         holderInfoPhone: '',
     });
 
-
     const submit = (e) => {
         e.preventDefault();
 
         setData('paymentMethod', paymentMethod);
-        console.log(data);
         post(route('payment.pay.credit-card'));
     };
 
-    // useEffect(() => { console.log(data.cardNumber) }, [data.cardNumber]);
 
     return (
         <form onSubmit={submit} className='flex flex-col gap-4'>

@@ -1,10 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
 import { Head, Link, useForm } from '@inertiajs/react';
-import TextInput from '@/Components/TextInput';
 import BoletoForm from './Partials/BoletoForm';
 import PixForm from './Partials/PixForm';
 import CreditCardForm from './Partials/CreditCardForm';
@@ -17,18 +13,11 @@ export default function Register() {
         date: new Date().toISOString().split('T')[0]
     });
 
-
-
-
     const submit = (e) => {
         e.preventDefault();
-
         setData('paymentMethod', paymentMethod);
-        console.log(data);
         post(route('payment.store'));
     };
-
-    useEffect(() => { console.log(errors) }, [errors]);
 
     return (
         <GuestLayout>
