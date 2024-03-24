@@ -11,11 +11,21 @@ class BoletoPayment extends Payment
 {
     public function __construct(
         protected PaymentDto $payment,
-        protected string $invoiceUrl = '',
+        protected string $boletoUrl = '',
     ) {
         parent::__construct(paymentAttributes: $payment);
 
         $this->validate();
+    }
+
+    public function getBoletoUrl(): string
+    {
+        return $this->boletoUrl;
+    }
+
+    public function setBoletoUrl(string $boletoUrl): void
+    {
+        $this->boletoUrl = $boletoUrl;
     }
 
     protected function validate()
