@@ -7,7 +7,7 @@ use App\Http\Controllers\Payment\PayWithPixController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->prefix('payment')->group(function () {
-    Route::get('register', [RegisterPaymentController::class, 'create'])
+    Route::get('register', [RegisterPaymentController::class, 'handle'])
                 ->name('payment.register');
 
     Route::post('pay/cc', [PayWithCreditCardController::class, 'handle'])
