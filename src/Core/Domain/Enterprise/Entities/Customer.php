@@ -33,18 +33,17 @@ class Customer
     public function getData()
     {
         return [
-            'id' => (string)$this->id,
+            //'id' => (string)$this->id,
             'externalId' => $this->externalId,
             'name' => $this->name,
             'cpfCnpj' => (string)$this->cpfCnpj,
-            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
+            //'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
         ];
     }
 
-    public function update(?string $name)
+    public function setExternalId(string $externalId)
     {
-        $this->name = $name;
-
+        $this->externalId = $externalId;
         $this->validate();
     }
 

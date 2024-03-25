@@ -18,6 +18,12 @@ class BoletoPayment extends Payment
         $this->validate();
     }
 
+    public function getId(): string
+    {
+        return parent::getId();
+       // return $this->id;
+    }
+
     public function getBoletoUrl(): string
     {
         return $this->boletoUrl;

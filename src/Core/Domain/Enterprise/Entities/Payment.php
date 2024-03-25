@@ -27,6 +27,7 @@ abstract class Payment
     protected $invoiceUrl;
     protected $transactionReceiptUrl;
     protected $createdAt;
+    protected $remoteIp;
 
     public function __construct(PaymentDto $paymentAttributes)
     {
@@ -40,6 +41,7 @@ abstract class Payment
         $this->invoiceUrl = $paymentAttributes->invoiceUrl;
         $this->transactionReceiptUrl = $paymentAttributes->transactionReceiptUrl;
         $this->createdAt = $paymentAttributes->createdAt ? $paymentAttributes->createdAt : new DateTime();
+        $this->remoteIp = $paymentAttributes->remoteIp;
 
         $this->validate();
     }
@@ -58,6 +60,11 @@ abstract class Payment
         $this->externalId = $updateData->externalId;
         $this->invoiceUrl = $updateData->invoiceUrl;
         $this->transactionReceiptUrl = $updateData->transactionReceiptUrl;
+    }
+
+    public function setId(string $id) {
+        $this->id = new Uuid($id);
+        $this->validate();
     }
 
     public function getData()
