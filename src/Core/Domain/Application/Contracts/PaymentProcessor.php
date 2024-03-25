@@ -13,5 +13,5 @@ interface PaymentProcessor
      * @param PaymentDetailsDto $details An object that contains the payment details such as amount, and customer information.
      * @return void
      */
-    public function processPayment(string $method, PaymentDetailsDto $details);
+    public function processPayment(string $method, Payment $payment);
 }

@@ -19,7 +19,6 @@ class CreditCardPayment extends Payment
         protected PaymentDto $payment,
         protected CreditCard | CreditCardDto $creditCard,
         protected CreditCardHolderInfoDto | CreditCardHolder $creditCardHolderInfo,
-        protected string $remoteIp = '',
     ) {
         parent::__construct(paymentAttributes: $payment);
 

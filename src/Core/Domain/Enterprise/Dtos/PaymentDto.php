@@ -10,6 +10,7 @@ class PaymentDto {
         public ?string $id = null,
         public ?string $customerId = null,
         public ?string $externalId = null,
+        public ?string $paymentMethod = null,
         public ?float $value = null,
         public string|DateTime|null $dueDate = null,
         public ?string $description = null,
@@ -17,5 +18,6 @@ class PaymentDto {
         public ?string $invoiceUrl = null,
         public ?string $transactionReceiptUrl = null,
         public string|DateTime|null $createdAt = null,
+        public ?string $remoteIp = null,
     ) {}
 }

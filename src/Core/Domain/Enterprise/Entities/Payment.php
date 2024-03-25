@@ -20,6 +20,7 @@ abstract class Payment
     protected $id;
     protected $customerId;
     protected $externalId;
+    protected $paymentMethod;
     protected $value;
     protected $dueDate;
     protected $description;
@@ -38,6 +39,7 @@ abstract class Payment
         $this->dueDate = $paymentAttributes->dueDate ? $paymentAttributes->dueDate : new DateTime();
         $this->description = $paymentAttributes->description;
         $this->status = $paymentAttributes->status ? $paymentAttributes->status : PaymentStatus::PENDING;
+        $this->paymentMethod = $paymentAttributes->paymentMethod;
         $this->invoiceUrl = $paymentAttributes->invoiceUrl;
         $this->transactionReceiptUrl = $paymentAttributes->transactionReceiptUrl;
         $this->createdAt = $paymentAttributes->createdAt ? $paymentAttributes->createdAt : new DateTime();
@@ -73,6 +75,7 @@ abstract class Payment
             'id' => $this->id,
             'customerId' => $this->customerId,
             'externalId' => $this->externalId,
+            'paymentMethod' => $this->paymentMethod,
             'value' => $this->value,
             'dueDate' => $this->dueDate,
             'description' => $this->description,
