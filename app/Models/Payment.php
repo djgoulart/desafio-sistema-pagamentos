@@ -35,6 +35,9 @@ class Payment extends Model
         'creditCardHolderAddressComplement',
         'boletoUrl',
         'customerId',
+        'paymentMethod',
+        'pixQrCode',
+        'pixPayload',
     ];
 
     protected function casts(): array

@@ -5,65 +5,94 @@ namespace App\Http\Controllers\Payment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PixPaymentRequest;
 use Core\Domain\Application\Contracts\CustomerContract;
-use Core\Domain\Application\Contracts\PaymentProcessor;
 use Core\Domain\Application\Contracts\PixProcessor;
 use Core\Domain\Enterprise\Dtos\CustomerDto;
 use Core\Domain\Enterprise\Dtos\PaymentDto;
 use Core\Domain\Enterprise\Dtos\PaymentDetailsDto;
 use Core\Domain\Enterprise\Enums\PaymentMethods;
+use Core\Domain\Enterprise\Entities\PixPayment;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use App\Services\PixPaymentService;
+use App\Repositories\PixPaymentEloquentRepository;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PayWithPixController extends Controller
 {
     protected $customerService;
     protected $paymentProcessor;
-    protected $pixProcessor;
+    protected $paymentRepository;
 
     public function __construct(
         CustomerContract $customerService,
-        PaymentProcessor $paymentProcessor,
-        PixProcessor $pixProcessor
+        PixPaymentService $paymentProcessor,
+        PixPaymentEloquentRepository $paymentRepository
     )
     {
         $this->customerService = $customerService;
         $this->paymentProcessor = $paymentProcessor;
-        $this->pixProcessor = $pixProcessor;
+        $this->paymentRepository = $paymentRepository;
     }
 
     public function handle(PixPaymentRequest $request): RedirectResponse
     {
-        //dd($request->all());
-
         $customerData = new CustomerDto(
             name: $request->input('customerName'),
             cpfCnpj: $request->input('customerCpfCnpj'),
         );
 
         $customer = $this->customerService->createCustomer($customerData);
-
+        //dd($customer);
         if(!$customer) {
             return redirect(route('payment.register'))->with('error', 'Failed to create customer');
         }
 
-        $paymentMethod = PaymentMethods::from($request->input('paymentMethod'));
-
-        $payment = new PaymentDto(
+        $paymentData = new PaymentDto(
             customerId: $customer['externalId'],
             value: $request->input('value'),
             dueDate: $request->input('dueDate'),
-        );
-
-        $paymentDetails = new PaymentDetailsDto(
-            payment: $payment,
             remoteIp: $request->ip(),
+            paymentMethod: PaymentMethods::PIX->value,
         );
 
-        $payment = $this->paymentProcessor->processPayment($request->input('paymentMethod'), $paymentDetails);
-        $withPixDetails = $this->pixProcessor->getPixData($payment);
+        $paymentToPersist = new PixPayment(payment: $paymentData);
 
-        dd($withPixDetails);
+        $persistedPayment = $this->paymentRepository->create(payment: $paymentToPersist);
 
-        return redirect(route('payment.register'));
+        $serviceResponse = $this->paymentProcessor->processPayment($persistedPayment);
+       // dd($serviceResponse);
+
+        $pixDetails = $this->paymentProcessor->getPixData(externalId: $serviceResponse['id']);
+        //dd($pixDetails);
+
+        $this->paymentRepository->update(
+            payment: $persistedPayment,
+            data: [
+                'status' => $serviceResponse['status'],
+                'externalId' => $serviceResponse['id'],
+                'invoiceUrl' => $serviceResponse['invoiceUrl'],
+                'transactionReceiptUrl' => $serviceResponse['transactionReceiptUrl'],
+                'pixQrCode' => $pixDetails['encodedImage'],
+                'pixPayload' => $pixDetails['payload'],
+                ]
+            );
+
+
+
+        $payment = $this->paymentRepository->findById($persistedPayment->id);
+
+        return redirect(route('payment.pay.pix.result', ['paymentId' => $payment->id]));
+
+    }
+
+    public function result($paymentId): Response
+    {
+        $payment = $this->paymentRepository->findById($paymentId);
+       // dd($payment);
+        return Inertia::render('Payment/PixResult', [
+            'qrCode' => $payment->qrCode,
+            'payload' => $payment->payload,
+        ]);
     }
 }
