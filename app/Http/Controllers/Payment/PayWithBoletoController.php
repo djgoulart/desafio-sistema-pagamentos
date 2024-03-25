@@ -7,17 +7,13 @@ use App\Http\Requests\BoletoPaymentRequest;
 use Core\Domain\Application\Contracts\CustomerContract;
 use Core\Domain\Enterprise\Dtos\CustomerDto;
 use Core\Domain\Enterprise\Dtos\PaymentDto;
-use Core\Domain\Enterprise\Dtos\PaymentDetailsDto;
 use Core\Domain\Enterprise\Enums\PaymentMethods;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Core\Domain\Application\Contracts\PaymentRepository;
 use Core\Domain\Enterprise\Entities\BoletoPayment;
 use App\Services\BoletoPaymentService;
 use App\Repositories\BoletoPaymentEloquentRepository;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Models\Payment as PaymentModel;
 
 class PayWithBoletoController extends Controller
 {
@@ -78,9 +74,8 @@ class PayWithBoletoController extends Controller
 
     public function result($paymentId): Response
     {
-        //$payment = PaymentModel::find($paymentId)->attributesToArray();
         $payment = $this->paymentRepository->findById($paymentId);
-       // dd($payment);
+
         return Inertia::render('Payment/BoletoResult', [
             'invoiceUrl' => $payment->invoiceUrl,
             'boletoUrl' => $payment->boletoUrl,
