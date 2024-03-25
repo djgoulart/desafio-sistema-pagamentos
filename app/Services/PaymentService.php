@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Payment as PaymentModel;
 use Core\Domain\Application\Payments\PaymentFactory;
 use Core\Domain\Enterprise\Enums\PaymentMethods;
 use Core\Domain\Enterprise\Enums\PaymentStatus;
@@ -12,11 +13,11 @@ use Core\Domain\Enterprise\Dtos\PaymentUpdateDto;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 
-class PaymentService implements PaymentProcessor
+class PaymentService
 {
+
     public function processPayment(string $method, PaymentDetailsDto $details)
     {
-
         if (!PaymentMethods::tryFrom($method)) {
             return response()->json(['error' => 'Invalid payment method'], 400);
         }
@@ -68,6 +69,8 @@ class PaymentService implements PaymentProcessor
         if($paymentMethod->value == PaymentMethods::BOLETO->value) {
             $payment->setBoletoUrl($responseData['bankSlipUrl']);
         }
+
+        $this->updatePayment($payment);
 
         return $payment;
 

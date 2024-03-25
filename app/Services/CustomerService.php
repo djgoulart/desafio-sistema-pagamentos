@@ -7,14 +7,44 @@ use Core\Domain\Enterprise\Dtos\CustomerDto;
 use Core\Domain\Application\Contracts\CustomerContract;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
+use App\Models\Customer as CustomerModel;
 
 class CustomerService implements CustomerContract
 {
+    private function findCustomerByCpfCnpj($cpfCnpj)
+    {
+        $customerPersisted = CustomerModel::where('cpfCnpj', preg_replace('/\D/', '', $cpfCnpj))->first();
+
+        if($customerPersisted) {
+            $customerData = new CustomerDto(
+                id: $customerPersisted->id,
+                externalId: $customerPersisted->externalId,
+                name: $customerPersisted->name,
+                cpfCnpj: $customerPersisted->cpfCnpj,
+                createdAt: $customerPersisted->created_at,
+            );
+
+            $customer = new Customer(customerData: $customerData);
+            return $customer->getData();
+        }
+
+        return null;
+    }
+
     public function createCustomer(CustomerDto $customer)
     {
-        $apiUrl = Config::get('services.asaas.url');
+        $customerAlreadyExists = $this->findCustomerByCpfCnpj($customer->cpfCnpj);
 
-        //$customerData = $customer->getData();
+        if($customerAlreadyExists) {
+            return $customerAlreadyExists;
+        }
+
+        $apiUrl = Config::get('services.asaas.url');
+        $accessToken = Config::get('services.asaas.token');
+
+        if ($apiUrl === null || $accessToken === null) {
+            throw new \Exception('API configurations are not set');
+        }
 
         $requestData = [
             'name' => $customer->name,
@@ -24,7 +54,7 @@ class CustomerService implements CustomerContract
         $response = Http::withHeaders([
             'accept' => 'application/json',
             'content-type' => 'application/json',
-            'access_token' => Config::get('services.asaas.token')
+            'access_token' => $accessToken
         ])->post("$apiUrl/customers", $requestData);
 
         if($response->successful()) {
@@ -36,17 +66,17 @@ class CustomerService implements CustomerContract
             );
 
             $customerFromDomain = new Customer(customerData: $customerData);
-            return $customerFromDomain->getData();
+
+            $persistedCustomer = CustomerModel::create($customerFromDomain->getData());
+
+            $customerFromDomain->setExternalId($persistedCustomer->externalId);
+            return $customerFromDomain;
         }
 
         if($response->failed()) {
             $respData = $response->json();
             throw new \Exception($respData['errors'][0]['description']);
         }
-
-
-        // Aqui, você pode adicionar mais lógica como salvar o pagamento no banco de dados,
-        // enviar notificações, etc., dependendo dos requisitos da sua aplicação.
 
     }
 }
