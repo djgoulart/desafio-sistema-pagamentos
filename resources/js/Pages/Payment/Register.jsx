@@ -1,5 +1,5 @@
 import React from 'react';
-import GuestLayout from '@/Layouts/GuestLayout';
+import FormLayout from '@/Layouts/FormLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import BoletoForm from './Partials/BoletoForm';
 import PixForm from './Partials/PixForm';
@@ -20,7 +20,7 @@ export default function Register() {
     };
 
     return (
-        <GuestLayout>
+        <FormLayout>
             <Head title="Register Payment" />
 
             <div className='flex flex-col gap-4'>
@@ -51,6 +51,6 @@ export default function Register() {
                 {paymentMethod === 'CREDIT_CARD' && (<CreditCardForm />)}
             </div>
 
-        </GuestLayout>
+        </FormLayout>
     );
 }
