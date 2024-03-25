@@ -30,6 +30,9 @@ return new class extends Migration
             $table->string('creditCardHolderAddressNumber')->nullable();
             $table->string('creditCardHolderAddressComplement')->nullable();
             $table->string('boletoUrl')->nullable();
+            $table->string('paymentMethod')->nullable();
+            $table->text('pixQrCode')->nullable();
+            $table->text('pixPayload')->nullable();
 
             $table->string('customerId');
             $table->foreign('customerId')->references('externalId')->on('customers');

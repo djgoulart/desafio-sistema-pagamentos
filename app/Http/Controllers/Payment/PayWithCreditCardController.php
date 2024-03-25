@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Payment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePaymentRequest;
 use Core\Domain\Application\Contracts\CustomerContract;
-use Core\Domain\Application\Contracts\PaymentProcessor;
 use Core\Domain\Enterprise\Dtos\CreditCardDto;
 use Core\Domain\Enterprise\Dtos\CreditCardHolderInfoDto;
 use Core\Domain\Enterprise\Dtos\CustomerDto;
@@ -16,13 +15,17 @@ use Core\Domain\Enterprise\Entities\Payment;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Services\PaymentService;
 
 class PayWithCreditCardController extends Controller
 {
     protected $paymentProcessor;
     protected $customerService;
 
-    public function __construct(PaymentProcessor $paymentProcessor, CustomerContract $customerService) {
+    public function __construct(
+        PaymentService $paymentProcessor,
+        CustomerContract $customerService
+    ) {
         $this->paymentProcessor = $paymentProcessor;
         $this->customerService = $customerService;
     }
