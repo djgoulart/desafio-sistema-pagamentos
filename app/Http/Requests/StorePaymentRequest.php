@@ -2,13 +2,12 @@
 
 namespace App\Http\Requests;
 
+use Core\Domain\Enterprise\Enums\PaymentMethods;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Core\Domain\Enterprise\Enums\PaymentMethods;
 
 class StorePaymentRequest extends FormRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -21,7 +20,7 @@ class StorePaymentRequest extends FormRequest
                 'required',
                 Rule::enum(PaymentMethods::class),
             ],
-            'value' => ['required', 'numeric']
+            'value' => ['required', 'numeric'],
         ];
     }
 }

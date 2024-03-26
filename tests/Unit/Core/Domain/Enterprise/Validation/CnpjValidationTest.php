@@ -2,9 +2,8 @@
 
 namespace Tests\Unit\Domain\Enterprise\Validation;
 
-
-use PHPUnit\Framework\TestCase;
 use Core\Domain\Enterprise\Validation\CnpjValidation;
+use PHPUnit\Framework\TestCase;
 
 class CnpjValidationTest extends TestCase
 {
@@ -56,5 +55,4 @@ class CnpjValidationTest extends TestCase
     {
         $this->assertFalse(CnpjValidation::validate(null));
     }
-
 }

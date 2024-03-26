@@ -33,6 +33,6 @@ return [
     'asaas' => [
         'token' => env('ASAAS_API_KEY'),
         'url' => env('ASAAS_API_URL'),
-    ]
+    ],
 
 ];

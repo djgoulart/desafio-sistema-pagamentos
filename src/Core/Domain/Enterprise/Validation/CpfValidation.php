@@ -6,7 +6,7 @@ class CpfValidation
 {
     public static function validate(?string $cpf = ''): bool
     {
-        if(!$cpf || empty($cpf)) {
+        if (! $cpf || empty($cpf)) {
             return false;
         }
 

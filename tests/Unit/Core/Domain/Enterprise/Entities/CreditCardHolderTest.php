@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Domain\Enterprise\Entities;
 
-use PHPUnit\Framework\TestCase;
 use Core\Domain\Enterprise\Entities\CreditCardHolder;
-use Core\Domain\Enterprise\ValueObjects\CpfCnpj;
 use Core\Domain\Enterprise\Exceptions\EntityValidationException;
+use Core\Domain\Enterprise\ValueObjects\CpfCnpj;
+use PHPUnit\Framework\TestCase;
 
 class CreditCardHolderTest extends TestCase
 {
@@ -48,7 +48,7 @@ class CreditCardHolderTest extends TestCase
 
         $this->assertEquals($name, $data['name']);
         $this->assertEquals($email, $data['email']);
-        $this->assertEquals((string)$cpfCnpj, $data['cpfCnpj']);
+        $this->assertEquals((string) $cpfCnpj, $data['cpfCnpj']);
         $this->assertEquals($postalCode, $data['postalCode']);
         $this->assertEquals($addressNumber, $data['addressNumber']);
         $this->assertEquals($addressComplement, $data['addressComplement']);

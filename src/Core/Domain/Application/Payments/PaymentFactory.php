@@ -2,10 +2,9 @@
 
 namespace Core\Domain\Application\Payments;
 
-use Core\Domain\Enterprise\Enums\PaymentMethods;
 use Core\Domain\Enterprise\Dtos\PaymentDetailsDto;
 use Core\Domain\Enterprise\Entities\Payment;
-use Core\Domain\Enterprise\Entities\CreditCardPayment;
+use Core\Domain\Enterprise\Enums\PaymentMethods;
 use InvalidArgumentException;
 
 class PaymentFactory
@@ -19,7 +18,7 @@ class PaymentFactory
 
     public static function createPayment(PaymentMethods $type, PaymentDetailsDto $data): Payment
     {
-        if (!isset(self::$methodMap[$type->value])) {
+        if (! isset(self::$methodMap[$type->value])) {
             throw new InvalidArgumentException('Invalid payment method');
         }
 

@@ -2,11 +2,9 @@
 
 namespace Tests\Unit\Domain\Enterprise\ValueObjects;
 
-use PHPUnit\Framework\TestCase;
 use Core\Domain\Enterprise\ValueObjects\CpfCnpj;
 use InvalidArgumentException;
-use Core\Domain\Enterprise\Validation\CpfValidation;
-use Core\Domain\Enterprise\Validation\CnpjValidation;
+use PHPUnit\Framework\TestCase;
 
 class CpfCnpjTest extends TestCase
 {
@@ -14,14 +12,14 @@ class CpfCnpjTest extends TestCase
     {
         $validCpf = '347.560.350-00';
         $cpfCnpj = new CpfCnpj($validCpf);
-        $this->assertEquals(preg_replace('/\D/', '', $validCpf), (string)$cpfCnpj);
+        $this->assertEquals(preg_replace('/\D/', '', $validCpf), (string) $cpfCnpj);
     }
 
     public function testConstructWithValidCnpj()
     {
         $validCnpj = '76.892.465/0001-66';
         $cpfCnpj = new CpfCnpj($validCnpj);
-        $this->assertEquals(preg_replace('/\D/', '', $validCnpj), (string)$cpfCnpj);
+        $this->assertEquals(preg_replace('/\D/', '', $validCnpj), (string) $cpfCnpj);
     }
 
     public function testConstructWithInvalidCpf()
@@ -40,6 +38,6 @@ class CpfCnpjTest extends TestCase
     {
         $validCpf = '731.361.000-93';
         $cpfCnpj = new CpfCnpj($validCpf);
-        $this->assertEquals('73136100093', (string)$cpfCnpj);
+        $this->assertEquals('73136100093', (string) $cpfCnpj);
     }
 }

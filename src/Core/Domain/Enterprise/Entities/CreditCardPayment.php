@@ -2,23 +2,17 @@
 
 namespace Core\Domain\Enterprise\Entities;
 
-use Core\Domain\Enterprise\Entities\Traits\EntityTrait;
-use Core\Domain\Enterprise\ValueObjects\Uuid;
-use Core\Domain\Enterprise\Validation\EntityValidation;
-use Core\Domain\Enterprise\Enums\PaymentStatus;
-use Core\Domain\Enterprise\ValueObjects\CreditCard;
-use Core\Domain\Enterprise\Dtos\PaymentDto;
 use Core\Domain\Enterprise\Dtos\CreditCardDto;
 use Core\Domain\Enterprise\Dtos\CreditCardHolderInfoDto;
-use Core\Domain\Enterprise\Entities\CreditCardHolder;
-use Datetime;
+use Core\Domain\Enterprise\Dtos\PaymentDto;
+use Core\Domain\Enterprise\ValueObjects\CreditCard;
 
 class CreditCardPayment extends Payment
 {
     public function __construct(
         protected PaymentDto $payment,
-        protected CreditCard | CreditCardDto $creditCard,
-        protected CreditCardHolderInfoDto | CreditCardHolder $creditCardHolderInfo,
+        protected CreditCard|CreditCardDto $creditCard,
+        protected CreditCardHolderInfoDto|CreditCardHolder $creditCardHolderInfo,
     ) {
         parent::__construct(paymentAttributes: $payment);
 
@@ -34,7 +28,7 @@ class CreditCardPayment extends Payment
             $this->creditCard = $creditCard;
         }
 
-        if($creditCardHolderInfo instanceof CreditCardHolderInfoDto) {
+        if ($creditCardHolderInfo instanceof CreditCardHolderInfoDto) {
             $this->creditCardHolderInfo = new CreditCardHolder(
                 name: $creditCardHolderInfo->name,
                 email: $creditCardHolderInfo->email,
@@ -50,7 +44,6 @@ class CreditCardPayment extends Payment
 
         $this->validate();
     }
-
 
     public function getCreditCard()
     {

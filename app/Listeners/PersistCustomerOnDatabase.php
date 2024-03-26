@@ -3,8 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\CustomerCreated;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class PersistCustomerOnDatabase
 {

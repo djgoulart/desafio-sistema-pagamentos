@@ -2,11 +2,11 @@
 
 namespace Core\Domain\Enterprise\Entities;
 
+use Core\Domain\Enterprise\Dtos\CustomerDto;
 use Core\Domain\Enterprise\Entities\Traits\EntityTrait;
-use Core\Domain\Enterprise\ValueObjects\Uuid;
 use Core\Domain\Enterprise\Validation\EntityValidation;
 use Core\Domain\Enterprise\ValueObjects\CpfCnpj;
-use Core\Domain\Enterprise\Dtos\CustomerDto;
+use Core\Domain\Enterprise\ValueObjects\Uuid;
 use Datetime;
 
 class Customer
@@ -14,9 +14,13 @@ class Customer
     use EntityTrait;
 
     protected $id;
+
     protected $externalId;
+
     protected $name;
+
     protected $cpfCnpj;
+
     protected $createdAt;
 
     public function __construct(CustomerDto $customerData)
@@ -36,7 +40,7 @@ class Customer
             //'id' => (string)$this->id,
             'externalId' => $this->externalId,
             'name' => $this->name,
-            'cpfCnpj' => (string)$this->cpfCnpj,
+            'cpfCnpj' => (string) $this->cpfCnpj,
             //'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
         ];
     }

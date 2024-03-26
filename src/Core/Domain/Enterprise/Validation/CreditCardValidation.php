@@ -19,35 +19,34 @@ class CreditCardValidation
 
     public static function validateCardNumber(string $number): void
     {
-        if (empty($number) || !self::isValidCardNumber($number)) {
+        if (empty($number) || ! self::isValidCardNumber($number)) {
             throw new InvalidArgumentException('Invalid card number.');
         }
 
         $number = preg_replace('/\D/', '', $number);
 
-        if (!self::isValidCardNumber($number)) {
+        if (! self::isValidCardNumber($number)) {
             throw new InvalidArgumentException('Invalid card number.');
         }
     }
 
     public static function validateExpiryDate(string $expiryMonth, string $expiryYear): void
     {
-        if (empty($expiryMonth) || empty($expiryYear) || !self::isExpiryDateValid($expiryMonth, $expiryYear)) {
+        if (empty($expiryMonth) || empty($expiryYear) || ! self::isExpiryDateValid($expiryMonth, $expiryYear)) {
             throw new InvalidArgumentException('Invalid expiry date.');
         }
     }
 
     public static function validateCcv(string $ccv): void
     {
-        if (empty($ccv) || !self::isValidCcv($ccv)) {
+        if (empty($ccv) || ! self::isValidCcv($ccv)) {
             throw new InvalidArgumentException('Invalid CCV.');
         }
     }
 
-
     private static function isValidCardNumber(string $number): bool
     {
-        if (!ctype_digit($number)) {
+        if (! ctype_digit($number)) {
             return false;
         }
 
@@ -76,19 +75,19 @@ class CreditCardValidation
 
     private static function isExpiryDateValid(string $month, string $year): bool
     {
-        if (!preg_match('/^\d{2}$/', $month)) {
+        if (! preg_match('/^\d{2}$/', $month)) {
             return false;
         }
 
-        if (!preg_match('/^\d{4}$/', $year)) {
+        if (! preg_match('/^\d{4}$/', $year)) {
             return false;
         }
 
-        $currentYear = (int)date('Y');
-        $currentMonth = (int)date('m');
+        $currentYear = (int) date('Y');
+        $currentMonth = (int) date('m');
 
-        $year = (int)$year;
-        $month = (int)$month;
+        $year = (int) $year;
+        $month = (int) $month;
 
         if ($year < $currentYear) {
             return false;

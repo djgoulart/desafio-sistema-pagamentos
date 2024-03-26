@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Core\Domain\Enterprise\Validation;
 
-use Core\Domain\Enterprise\Validation\PaymentValidation;
 use Core\Domain\Enterprise\Exceptions\EntityValidationException;
+use Core\Domain\Enterprise\Validation\PaymentValidation;
 use Tests\TestCase;
 
 class PaymentValidationTest extends TestCase

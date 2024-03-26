@@ -2,7 +2,8 @@
 
 namespace Core\Domain\Enterprise\Dtos;
 
-class CreditCardHolderInfoDto {
+class CreditCardHolderInfoDto
+{
     public function __construct(
         public ?string $name = '',
         public ?string $email = '',
@@ -11,5 +12,6 @@ class CreditCardHolderInfoDto {
         public ?string $addressNumber = '',
         public ?string $addressComplement = '',
         public ?string $phone = '',
-    ) {}
+    ) {
+    }
 }

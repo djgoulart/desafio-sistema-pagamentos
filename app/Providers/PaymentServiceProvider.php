@@ -2,17 +2,14 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Core\Domain\Application\Payments\PaymentFactory;
-use Core\Domain\Enterprise\Enums\PaymentMethods;
-use Core\Domain\Enterprise\Entities\CreditCardPayment;
-use Core\Domain\Enterprise\Entities\BoletoPayment;
-use Core\Domain\Enterprise\Entities\PixPayment;
-use InvalidArgumentException;
 use App\Models\Payment as PaymentModel;
-use App\Http\Controllers\PayWithBoletoController;
-use Core\Domain\Application\Contracts\PaymentRepository;
-use App\Repositories\Eloquent\BoletoPaymentEloquentRepository;
+use Core\Domain\Application\Payments\PaymentFactory;
+use Core\Domain\Enterprise\Entities\BoletoPayment;
+use Core\Domain\Enterprise\Entities\CreditCardPayment;
+use Core\Domain\Enterprise\Entities\PixPayment;
+use Core\Domain\Enterprise\Enums\PaymentMethods;
+use Illuminate\Support\ServiceProvider;
+use InvalidArgumentException;
 
 class PaymentServiceProvider extends ServiceProvider
 {
@@ -30,7 +27,7 @@ class PaymentServiceProvider extends ServiceProvider
     public function boot(): void
     {
         PaymentFactory::registerPaymentMethod(PaymentMethods::CREDIT_CARD->value, function ($data) {
-            if (!$data->creditCard || !$data->remoteIp || !$data->creditCardHolderInfo) {
+            if (! $data->creditCard || ! $data->remoteIp || ! $data->creditCardHolderInfo) {
                 throw new InvalidArgumentException('Credit card data, holder info and remote IP are required');
             }
 
@@ -43,7 +40,7 @@ class PaymentServiceProvider extends ServiceProvider
 
             PaymentModel::create([
                 'customerId' => $data->payment->customerId,
-               // 'billing_type' => PaymentMethods::CREDIT_CARD->value,
+                // 'billing_type' => PaymentMethods::CREDIT_CARD->value,
                 'value' => number_format($data->payment->value, 2, '.', ''),
                 'dueDate' => $data->payment->dueDate,
                 'description' => 'Pagamento de fatura',
@@ -70,10 +67,10 @@ class PaymentServiceProvider extends ServiceProvider
             );
 
             $paymentData = $payment->getData();
-           // dd($paymentData);
+            // dd($paymentData);
             $persistedPayment = PaymentModel::create([
                 'customerId' => $paymentData['customerId'],
-               // 'billing_type' => PaymentMethods::CREDIT_CARD->value,
+                // 'billing_type' => PaymentMethods::CREDIT_CARD->value,
                 'value' => number_format($paymentData['value'], 2, '.', ''),
                 'dueDate' => $paymentData['dueDate'],
                 'description' => 'Pagamento de fatura por boleto',
@@ -85,6 +82,7 @@ class PaymentServiceProvider extends ServiceProvider
             ]);
 
             $payment->setId($persistedPayment->id);
+
             //dd($payment);
             return $payment;
         });
@@ -96,7 +94,7 @@ class PaymentServiceProvider extends ServiceProvider
 
             PaymentModel::create([
                 'customerId' => $data->payment->customerId,
-               // 'billing_type' => PaymentMethods::CREDIT_CARD->value,
+                // 'billing_type' => PaymentMethods::CREDIT_CARD->value,
                 'value' => number_format($data->payment->value, 2, '.', ''),
                 'dueDate' => $data->payment->dueDate,
                 'description' => 'Pagamento de fatura',

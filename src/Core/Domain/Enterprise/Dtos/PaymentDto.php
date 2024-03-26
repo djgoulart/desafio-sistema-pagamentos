@@ -5,7 +5,8 @@ namespace Core\Domain\Enterprise\Dtos;
 use Core\Domain\Enterprise\Enums\PaymentStatus;
 use Datetime;
 
-class PaymentDto {
+class PaymentDto
+{
     public function __construct(
         public ?string $id = null,
         public ?string $customerId = null,
@@ -19,5 +20,6 @@ class PaymentDto {
         public ?string $transactionReceiptUrl = null,
         public string|DateTime|null $createdAt = null,
         public ?string $remoteIp = null,
-    ) {}
+    ) {
+    }
 }

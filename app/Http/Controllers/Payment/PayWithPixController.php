@@ -4,32 +4,30 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PixPaymentRequest;
+use App\Repositories\PixPaymentEloquentRepository;
+use App\Services\PixPaymentService;
 use Core\Domain\Application\Contracts\CustomerContract;
-use Core\Domain\Application\Contracts\PixProcessor;
 use Core\Domain\Enterprise\Dtos\CustomerDto;
 use Core\Domain\Enterprise\Dtos\PaymentDto;
-use Core\Domain\Enterprise\Dtos\PaymentDetailsDto;
-use Core\Domain\Enterprise\Enums\PaymentMethods;
 use Core\Domain\Enterprise\Entities\PixPayment;
-use Illuminate\Http\Request;
+use Core\Domain\Enterprise\Enums\PaymentMethods;
 use Illuminate\Http\RedirectResponse;
-use App\Services\PixPaymentService;
-use App\Repositories\PixPaymentEloquentRepository;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class PayWithPixController extends Controller
 {
     protected $customerService;
+
     protected $paymentProcessor;
+
     protected $paymentRepository;
 
     public function __construct(
         CustomerContract $customerService,
         PixPaymentService $paymentProcessor,
         PixPaymentEloquentRepository $paymentRepository
-    )
-    {
+    ) {
         $this->customerService = $customerService;
         $this->paymentProcessor = $paymentProcessor;
         $this->paymentRepository = $paymentRepository;
@@ -44,7 +42,7 @@ class PayWithPixController extends Controller
 
         $customer = $this->customerService->createCustomer($customerData);
         //dd($customer);
-        if(!$customer) {
+        if (! $customer) {
             return redirect(route('payment.register'))->with('error', 'Failed to create customer');
         }
 
@@ -61,7 +59,7 @@ class PayWithPixController extends Controller
         $persistedPayment = $this->paymentRepository->create(payment: $paymentToPersist);
 
         $serviceResponse = $this->paymentProcessor->processPayment($persistedPayment);
-       // dd($serviceResponse);
+        // dd($serviceResponse);
 
         $pixDetails = $this->paymentProcessor->getPixData(externalId: $serviceResponse['id']);
         //dd($pixDetails);
@@ -75,8 +73,8 @@ class PayWithPixController extends Controller
                 'transactionReceiptUrl' => $serviceResponse['transactionReceiptUrl'],
                 'pixQrCode' => $pixDetails['encodedImage'],
                 'pixPayload' => $pixDetails['payload'],
-                ]
-            );
+            ]
+        );
 
         $payment = $this->paymentRepository->findById($persistedPayment->id);
 
@@ -87,7 +85,8 @@ class PayWithPixController extends Controller
     public function result($paymentId): Response
     {
         $payment = $this->paymentRepository->findById($paymentId);
-       // dd($payment);
+
+        // dd($payment);
         return Inertia::render('Payment/PixResult', [
             'qrCode' => $payment->qrCode,
             'payload' => $payment->payload,

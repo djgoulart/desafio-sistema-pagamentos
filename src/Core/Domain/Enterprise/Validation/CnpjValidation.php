@@ -6,7 +6,7 @@ class CnpjValidation
 {
     public static function validate(?string $cnpj = ''): bool
     {
-        if(!$cnpj || empty($cnpj)) {
+        if (! $cnpj || empty($cnpj)) {
             return false;
         }
 

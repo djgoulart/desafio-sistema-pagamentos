@@ -2,14 +2,13 @@
 
 namespace Core\Domain\Enterprise\Entities;
 
-use Core\Domain\Enterprise\Entities\Traits\EntityTrait;
-use Core\Domain\Enterprise\ValueObjects\Uuid;
-use Core\Domain\Enterprise\Validation\EntityValidation;
-use Core\Domain\Enterprise\Validation\PaymentValidation;
-use Core\Domain\Enterprise\Enums\PaymentStatus;
-use Core\Domain\Enterprise\Contracts\Transaction;
 use Core\Domain\Enterprise\Dtos\PaymentDto;
 use Core\Domain\Enterprise\Dtos\PaymentUpdateDto;
+use Core\Domain\Enterprise\Entities\Traits\EntityTrait;
+use Core\Domain\Enterprise\Enums\PaymentStatus;
+use Core\Domain\Enterprise\Validation\EntityValidation;
+use Core\Domain\Enterprise\Validation\PaymentValidation;
+use Core\Domain\Enterprise\ValueObjects\Uuid;
 use Datetime;
 use Exception;
 
@@ -18,16 +17,27 @@ abstract class Payment
     use EntityTrait;
 
     protected $id;
+
     protected $customerId;
+
     protected $externalId;
+
     protected $paymentMethod;
+
     protected $value;
+
     protected $dueDate;
+
     protected $description;
+
     protected $status;
+
     protected $invoiceUrl;
+
     protected $transactionReceiptUrl;
+
     protected $createdAt;
+
     protected $remoteIp;
 
     public function __construct(PaymentDto $paymentAttributes)
@@ -50,12 +60,12 @@ abstract class Payment
 
     public function updatePaymentDetails(PaymentUpdateDto $updateData)
     {
-        if (!PaymentStatus::tryFrom($updateData->status)) {
-            throw new Exception("Invalid payment status provided.");
+        if (! PaymentStatus::tryFrom($updateData->status)) {
+            throw new Exception('Invalid payment status provided.');
         }
 
-        if(!empty($this->extenalId)) {
-            throw new Exception("Payment already processed.");
+        if (! empty($this->extenalId)) {
+            throw new Exception('Payment already processed.');
         }
 
         $this->status = $updateData->status;
@@ -64,7 +74,8 @@ abstract class Payment
         $this->transactionReceiptUrl = $updateData->transactionReceiptUrl;
     }
 
-    public function setId(string $id) {
+    public function setId(string $id)
+    {
         $this->id = new Uuid($id);
         $this->validate();
     }
@@ -82,15 +93,14 @@ abstract class Payment
             'status' => $this->status,
             'invoiceUrl' => $this->invoiceUrl,
             'transactionReceiptUrl' => $this->transactionReceiptUrl,
-            'createdAt' => $this->createdAt
+            'createdAt' => $this->createdAt,
         ];
     }
 
     protected function validate()
     {
-        EntityValidation::notNull($this->customerId, "CustomerID is required");
+        EntityValidation::notNull($this->customerId, 'CustomerID is required');
         PaymentValidation::validateValue($this->value);
         PaymentValidation::validateDueDate($this->dueDate);
     }
-
 }

@@ -2,9 +2,8 @@
 
 namespace Tests\Unit\Domain\Enterprise\Validation;
 
-
-use PHPUnit\Framework\TestCase;
 use Core\Domain\Enterprise\Validation\CpfValidation;
+use PHPUnit\Framework\TestCase;
 
 class CpfValidationTest extends TestCase
 {
@@ -66,5 +65,4 @@ class CpfValidationTest extends TestCase
         $this->assertFalse(CpfValidation::validate('1234567890'));
         $this->assertFalse(CpfValidation::validate('123456789012'));
     }
-
 }

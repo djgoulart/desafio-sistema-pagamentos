@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use Core\Domain\Enterprise\Entities\Customer;
-use Core\Domain\Enterprise\Dtos\CustomerDto;
+use App\Models\Customer as CustomerModel;
 use Core\Domain\Application\Contracts\CustomerContract;
+use Core\Domain\Enterprise\Dtos\CustomerDto;
+use Core\Domain\Enterprise\Entities\Customer;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
-use App\Models\Customer as CustomerModel;
 
 class CustomerService implements CustomerContract
 {
@@ -15,7 +15,7 @@ class CustomerService implements CustomerContract
     {
         $customerPersisted = CustomerModel::where('cpfCnpj', preg_replace('/\D/', '', $cpfCnpj))->first();
 
-        if($customerPersisted) {
+        if ($customerPersisted) {
             $customerData = new CustomerDto(
                 id: $customerPersisted->id,
                 externalId: $customerPersisted->externalId,
@@ -25,6 +25,7 @@ class CustomerService implements CustomerContract
             );
 
             $customer = new Customer(customerData: $customerData);
+
             return $customer->getData();
         }
 
@@ -35,7 +36,7 @@ class CustomerService implements CustomerContract
     {
         $customerAlreadyExists = $this->findCustomerByCpfCnpj($customer->cpfCnpj);
 
-        if($customerAlreadyExists) {
+        if ($customerAlreadyExists) {
             return $customerAlreadyExists;
         }
 
@@ -54,10 +55,10 @@ class CustomerService implements CustomerContract
         $response = Http::withHeaders([
             'accept' => 'application/json',
             'content-type' => 'application/json',
-            'access_token' => $accessToken
+            'access_token' => $accessToken,
         ])->post("$apiUrl/customers", $requestData);
 
-        if($response->successful()) {
+        if ($response->successful()) {
             $respData = $response->json();
             $customerData = new CustomerDto(
                 externalId: $respData['id'],
@@ -70,10 +71,11 @@ class CustomerService implements CustomerContract
             $persistedCustomer = CustomerModel::create($customerFromDomain->getData());
 
             $customerFromDomain->setExternalId($persistedCustomer->externalId);
+
             return $customerFromDomain;
         }
 
-        if($response->failed()) {
+        if ($response->failed()) {
             $respData = $response->json();
             throw new \Exception($respData['errors'][0]['description']);
         }

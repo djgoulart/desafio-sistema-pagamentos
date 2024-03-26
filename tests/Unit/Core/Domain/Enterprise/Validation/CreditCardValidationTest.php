@@ -10,7 +10,7 @@ class CreditCardValidationTest extends TestCase
 {
     public function testValidateHolderNameWithValidName()
     {
-        $validName = "John Doe";
+        $validName = 'John Doe';
         $this->assertNull(CreditCardValidation::validateHolderName($validName));
     }
 
@@ -31,7 +31,7 @@ class CreditCardValidationTest extends TestCase
     public function testValidateExpiryDateWithValidDate()
     {
         $futureYear = date('Y') + 1;
-        $this->assertNull(CreditCardValidation::validateExpiryDate('12', (string)$futureYear));
+        $this->assertNull(CreditCardValidation::validateExpiryDate('12', (string) $futureYear));
     }
 
     public function testValidateExpiryDateWithPastDate()
@@ -39,7 +39,7 @@ class CreditCardValidationTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid expiry date.');
         $pastYear = date('Y') - 1;
-        CreditCardValidation::validateExpiryDate('01', (string)$pastYear);
+        CreditCardValidation::validateExpiryDate('01', (string) $pastYear);
     }
 
     public function testValidateExpiryDateWithInvalidMonth()
@@ -47,7 +47,7 @@ class CreditCardValidationTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid expiry date.');
         $futureYear = date('Y') + 1;
-        CreditCardValidation::validateExpiryDate('13', (string)$futureYear);
+        CreditCardValidation::validateExpiryDate('13', (string) $futureYear);
     }
 
     public function testValidateExpiryDateWithInvalidYear()
@@ -84,7 +84,7 @@ class CreditCardValidationTest extends TestCase
         CreditCardValidation::validateCcv('12345');
     }
 
-     public function testIsValidCardNumberWithValidNumber()
+    public function testIsValidCardNumberWithValidNumber()
     {
         $validCardNumber = '4532015112830366';
         $reflection = new \ReflectionClass(CreditCardValidation::class);

@@ -2,8 +2,8 @@
 
 namespace Core\Domain\Enterprise\ValueObjects;
 
-use Core\Domain\Enterprise\Validation\CpfValidation;
 use Core\Domain\Enterprise\Validation\CnpjValidation;
+use Core\Domain\Enterprise\Validation\CpfValidation;
 use InvalidArgumentException;
 
 class CpfCnpj
@@ -21,7 +21,7 @@ class CpfCnpj
 
     private function ensureIsValid(string $value)
     {
-        if (!CpfValidation::validate($value) && !CnpjValidation::validate($value)) {
+        if (! CpfValidation::validate($value) && ! CnpjValidation::validate($value)) {
             throw new InvalidArgumentException('Invalid CPF or CNPJ.');
         }
     }

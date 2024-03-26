@@ -8,10 +8,8 @@ use Inertia\Response;
 
 class RegisterPaymentController extends Controller
 {
-
     public function handle(): Response
     {
         return Inertia::render('Payment/Register');
     }
-
 }

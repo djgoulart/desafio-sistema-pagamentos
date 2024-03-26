@@ -2,16 +2,17 @@
 
 namespace Tests\Unit\Domain\Enterprise\Entities;
 
+use Core\Domain\Enterprise\Dtos\PaymentDto;
 use Core\Domain\Enterprise\Entities\Payment;
 use Core\Domain\Enterprise\Enums\PaymentStatus;
 use Core\Domain\Enterprise\Exceptions\EntityValidationException;
 use Core\Domain\Enterprise\ValueObjects\Uuid;
-use Core\Domain\Enterprise\Dtos\PaymentDto;
-use Tests\TestCase;
 use DateTime;
+use Tests\TestCase;
 
 class ConcretePayment extends Payment
-{}
+{
+}
 
 class PaymentTest extends TestCase
 {
@@ -68,5 +69,4 @@ class PaymentTest extends TestCase
         );
         new ConcretePayment(paymentAttributes: $dto);
     }
-
 }

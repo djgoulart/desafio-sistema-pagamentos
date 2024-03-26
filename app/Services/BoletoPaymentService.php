@@ -2,19 +2,13 @@
 
 namespace App\Services;
 
-use Core\Domain\Application\Payments\PaymentFactory;
-use Core\Domain\Enterprise\Enums\PaymentMethods;
-use Core\Domain\Enterprise\Enums\PaymentStatus;
-use Core\Domain\Enterprise\Dtos\PaymentDetailsDto;
 use Core\Domain\Enterprise\Entities\BoletoPayment;
-use Core\Domain\Application\Contracts\PaymentProcessor;
-use Core\Domain\Enterprise\Dtos\PaymentUpdateDto;
+use Core\Domain\Enterprise\Enums\PaymentMethods;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 
 class BoletoPaymentService
 {
-
     public function processPayment(BoletoPayment $payment)
     {
         //dd($payment);
@@ -31,10 +25,10 @@ class BoletoPaymentService
         $response = Http::withHeaders([
             'accept' => 'application/json',
             'content-type' => 'application/json',
-            'access_token' => Config::get('services.asaas.token')
+            'access_token' => Config::get('services.asaas.token'),
         ])->post("$apiUrl/payments", $requestAttributes);
 
-        if($response->failed()) {
+        if ($response->failed()) {
             return response()->json(['error' => 'Failed to process payment'], 500);
         }
 

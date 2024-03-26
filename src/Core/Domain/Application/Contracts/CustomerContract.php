@@ -9,7 +9,7 @@ interface CustomerContract
     /**
      * Create a Customer.
      *
-     * @param CustomerDto $customer An object that contains the customer information.
+     * @param  CustomerDto  $customer  An object that contains the customer information.
      * @return void
      */
     public function createCustomer(CustomerDto $customer);

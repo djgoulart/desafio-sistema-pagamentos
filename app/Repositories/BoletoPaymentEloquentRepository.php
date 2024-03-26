@@ -3,16 +3,14 @@
 namespace App\Repositories;
 
 use App\Models\Payment as PaymentModel;
-use Core\Domain\Enterprise\Entities\BoletoPayment;
-use Core\Domain\Application\Contracts\PaymentRepository;
-use Core\Domain\Enterprise\Entities\Payment;
 use Core\Domain\Enterprise\Dtos\PaymentDto;
+use Core\Domain\Enterprise\Entities\BoletoPayment;
 
 class BoletoPaymentEloquentRepository
 {
     public function create(BoletoPayment $payment)
     {
-       // dd($payment);
+        // dd($payment);
         $persisted = PaymentModel::create([
             'customerId' => $payment->customerId,
             'value' => number_format($payment->value, 2, '.', ''),
@@ -29,10 +27,10 @@ class BoletoPaymentEloquentRepository
 
     public function update(BoletoPayment $payment, array $data)
     {
-       // dd($payment, $data);
+        // dd($payment, $data);
         $updated = PaymentModel::where('id', $payment->id)->update($data);
 
-        if($updated) {
+        if ($updated) {
             return true;
         }
 
@@ -43,10 +41,9 @@ class BoletoPaymentEloquentRepository
     {
         $persisted = PaymentModel::find($id)->attributesToArray();
 
-        if(!$persisted) {
+        if (! $persisted) {
             throw new \Exception('Payment not found');
         }
-
 
         $data = new PaymentDto(
             id: $persisted['id'],
@@ -64,6 +61,6 @@ class BoletoPaymentEloquentRepository
     }
 
     public function findByExternalId(string $externalId): BoletoPayment
-    {}
+    {
+    }
 }
-

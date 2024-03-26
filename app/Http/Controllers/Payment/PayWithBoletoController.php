@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BoletoPaymentRequest;
+use App\Repositories\BoletoPaymentEloquentRepository;
+use App\Services\BoletoPaymentService;
 use Core\Domain\Application\Contracts\CustomerContract;
 use Core\Domain\Enterprise\Dtos\CustomerDto;
 use Core\Domain\Enterprise\Dtos\PaymentDto;
-use Core\Domain\Enterprise\Enums\PaymentMethods;
-use Illuminate\Http\RedirectResponse;
 use Core\Domain\Enterprise\Entities\BoletoPayment;
-use App\Services\BoletoPaymentService;
-use App\Repositories\BoletoPaymentEloquentRepository;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -21,8 +20,7 @@ class PayWithBoletoController extends Controller
         protected BoletoPaymentService $paymentProcessor,
         protected CustomerContract $customerService,
         protected BoletoPaymentEloquentRepository $paymentRepository
-    )
-    {
+    ) {
         $this->paymentProcessor = $paymentProcessor;
         $this->customerService = $customerService;
         $this->paymentRepository = $paymentRepository;
@@ -37,7 +35,7 @@ class PayWithBoletoController extends Controller
 
         $customer = $this->customerService->createCustomer($customerData);
 
-        if(!$customer) {
+        if (! $customer) {
             return redirect(route('payment.register'))->with('error', 'Failed to create customer');
         }
 

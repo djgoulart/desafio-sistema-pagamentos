@@ -4,9 +4,9 @@ namespace Core\Domain\Enterprise\Entities;
 
 use Core\Domain\Enterprise\Validation\EntityValidation;
 use Core\Domain\Enterprise\ValueObjects\CpfCnpj;
-use Core\Domain\Enterprise\Exceptions\EntityValidationException;
 
-class CreditCardHolder {
+class CreditCardHolder
+{
     public function __construct(
         protected string $name = '',
         protected string $email = '',
@@ -26,14 +26,13 @@ class CreditCardHolder {
         return [
             'name' => $this->name,
             'email' => $this->email,
-            'cpfCnpj' => (string)$this->cpfCnpj,
+            'cpfCnpj' => (string) $this->cpfCnpj,
             'postalCode' => $this->postalCode,
             'addressNumber' => $this->addressNumber,
             'addressComplement' => $this->addressComplement,
             'phone' => $this->phone,
         ];
     }
-
 
     private function validate()
     {

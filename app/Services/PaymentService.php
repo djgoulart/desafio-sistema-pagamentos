@@ -2,23 +2,18 @@
 
 namespace App\Services;
 
-use App\Models\Payment as PaymentModel;
 use Core\Domain\Application\Payments\PaymentFactory;
-use Core\Domain\Enterprise\Enums\PaymentMethods;
-use Core\Domain\Enterprise\Enums\PaymentStatus;
 use Core\Domain\Enterprise\Dtos\PaymentDetailsDto;
-use Core\Domain\Enterprise\Entities\Payment;
-use Core\Domain\Application\Contracts\PaymentProcessor;
 use Core\Domain\Enterprise\Dtos\PaymentUpdateDto;
+use Core\Domain\Enterprise\Enums\PaymentMethods;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 
 class PaymentService
 {
-
     public function processPayment(string $method, PaymentDetailsDto $details)
     {
-        if (!PaymentMethods::tryFrom($method)) {
+        if (! PaymentMethods::tryFrom($method)) {
             return response()->json(['error' => 'Invalid payment method'], 400);
         }
 
@@ -34,7 +29,7 @@ class PaymentService
             'description' => 'Pagamento de fatura',
         ];
 
-        if($paymentMethod->value == PaymentMethods::CREDIT_CARD->value) {
+        if ($paymentMethod->value == PaymentMethods::CREDIT_CARD->value) {
             $requestAttributes['creditCard'] = $payment->getCreditCard();
             $requestAttributes['creditCardHolderInfo'] = $payment->getHolderInfo();
             $requestAttributes['remoteIp'] = $payment->remoteIp;
@@ -45,16 +40,15 @@ class PaymentService
         $response = Http::withHeaders([
             'accept' => 'application/json',
             'content-type' => 'application/json',
-            'access_token' => Config::get('services.asaas.token')
+            'access_token' => Config::get('services.asaas.token'),
         ])->post("$apiUrl/payments", $requestAttributes);
 
-
-        if($response->failed()) {
+        if ($response->failed()) {
             return response()->json(['error' => 'Failed to process payment'], 500);
         }
 
         $responseData = $response->json();
-       // dd($responseData);
+        // dd($responseData);
         $updateData = new PaymentUpdateDto(
             status: $responseData['status'],
             externalId: $responseData['id'],
@@ -66,7 +60,7 @@ class PaymentService
             updateData: $updateData
         );
 
-        if($paymentMethod->value == PaymentMethods::BOLETO->value) {
+        if ($paymentMethod->value == PaymentMethods::BOLETO->value) {
             $payment->setBoletoUrl($responseData['bankSlipUrl']);
         }
 

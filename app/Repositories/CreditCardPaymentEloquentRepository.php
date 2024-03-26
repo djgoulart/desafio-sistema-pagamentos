@@ -4,15 +4,12 @@ namespace App\Repositories;
 
 use App\Models\Payment as PaymentModel;
 use Core\Domain\Enterprise\Entities\CreditCardPayment;
-use Core\Domain\Application\Contracts\PaymentRepository;
-use Core\Domain\Enterprise\Entities\Payment;
-use Core\Domain\Enterprise\Dtos\PaymentDto;
 
 class CreditCardPaymentEloquentRepository
 {
     public function create(CreditCardPayment $payment)
     {
-       //dd($payment);
+        //dd($payment);
         $persisted = PaymentModel::create([
             'customerId' => $payment->customerId,
             'value' => number_format($payment->value, 2, '.', ''),
@@ -28,10 +25,10 @@ class CreditCardPaymentEloquentRepository
 
     public function update(CreditCardPayment $payment, array $data)
     {
-       // dd($payment, $data);
+        // dd($payment, $data);
         $updated = PaymentModel::where('id', $payment->id)->update($data);
 
-        if($updated) {
+        if ($updated) {
             return true;
         }
 
@@ -42,7 +39,7 @@ class CreditCardPaymentEloquentRepository
     {
         $persisted = PaymentModel::find($id)->attributesToArray();
 
-        if(!$persisted) {
+        if (! $persisted) {
             throw new \Exception('Payment not found');
         }
 
@@ -51,6 +48,6 @@ class CreditCardPaymentEloquentRepository
     }
 
     public function findByExternalId(string $externalId): CreditCardPayment
-    {}
+    {
+    }
 }
-

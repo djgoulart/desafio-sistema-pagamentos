@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\Core\Domain\Enterprise\Entities;
 
-use PHPUnit\Framework\TestCase;
-use Core\Domain\Enterprise\Entities\Customer;
 use Core\Domain\Enterprise\Dtos\CustomerDto;
-use Ramsey\Uuid\Uuid;
+use Core\Domain\Enterprise\Entities\Customer;
+use PHPUnit\Framework\TestCase;
 
 class CustomerTest extends TestCase
 {
-    private function createCustomerData(): CustomerDto {
+    private function createCustomerData(): CustomerDto
+    {
         return new CustomerDto(
             name: 'John Doe',
             cpfCnpj: '501.141.080-30',
@@ -20,7 +20,7 @@ class CustomerTest extends TestCase
     {
         $sut = new Customer(customerData: $this->createCustomerData());
         $customer = $sut->getData();
-       // dd($customer);
+        // dd($customer);
         $this->assertEquals('John Doe', $customer['name']);
         $this->assertEquals('50114108030', $customer['cpfCnpj']);
     }

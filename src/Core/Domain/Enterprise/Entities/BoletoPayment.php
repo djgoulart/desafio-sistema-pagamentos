@@ -2,10 +2,7 @@
 
 namespace Core\Domain\Enterprise\Entities;
 
-use Core\Domain\Enterprise\Entities\Traits\EntityTrait;
-use Core\Domain\Enterprise\Validation\EntityValidation;
 use Core\Domain\Enterprise\Dtos\PaymentDto;
-use Datetime;
 
 class BoletoPayment extends Payment
 {
@@ -21,7 +18,7 @@ class BoletoPayment extends Payment
     public function getId(): string
     {
         return parent::getId();
-       // return $this->id;
+        // return $this->id;
     }
 
     public function getBoletoUrl(): string

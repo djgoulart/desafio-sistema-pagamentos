@@ -4,21 +4,21 @@ namespace Tests\Unit\Domain\Enterprise\Entities;
 
 use Core\Domain\Enterprise\Dtos\CreditCardHolderInfoDto;
 use Core\Domain\Enterprise\Dtos\PaymentDto;
-use Core\Domain\Enterprise\Entities\CreditCardHolder;
 use Core\Domain\Enterprise\Entities\CreditCardPayment;
-use Core\Domain\Enterprise\Enums\PaymentStatus;
 use Core\Domain\Enterprise\Exceptions\EntityValidationException;
 use Core\Domain\Enterprise\ValueObjects\CpfCnpj;
 use Core\Domain\Enterprise\ValueObjects\CreditCard;
-use DateTime;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class CreditCardPaymentTest extends TestCase
 {
     private $paymentData;
+
     private $creditCard;
+
     private $creditCardHolderInfo;
+
     private string $remoteIp;
 
     protected function setUp(): void
@@ -58,8 +58,9 @@ class CreditCardPaymentTest extends TestCase
 
     private function createCreditCardPayment(string $customerId, float $value)
     {
-       // dd($value, $customerId);
+        // dd($value, $customerId);
         $payment = new PaymentDto(customerId: $customerId, value: $value);
+
         return new CreditCardPayment(
             payment: $payment,
             creditCard: $this->creditCard,
@@ -69,7 +70,7 @@ class CreditCardPaymentTest extends TestCase
 
     public function testCreditCardPaymentInitialization()
     {
-        $sut = $this->createCreditCardPayment(customerId:'cus_123', value: 123.45);
+        $sut = $this->createCreditCardPayment(customerId: 'cus_123', value: 123.45);
 
         $this->assertInstanceOf(CreditCardPayment::class, $sut);
         $this->assertIsArray($sut->getCreditCard());
@@ -117,7 +118,7 @@ class CreditCardPaymentTest extends TestCase
             holderName: 'John Doe',
             number: '4111111111111111',
             expiryMonth: '01',
-            expiryYear: (string)(date('Y') - 1),
+            expiryYear: (string) (date('Y') - 1),
             ccv: '123'
         );
 
@@ -159,5 +160,4 @@ class CreditCardPaymentTest extends TestCase
             creditCardHolderInfo: $this->creditCardHolderInfo,
         );
     }
-
 }
