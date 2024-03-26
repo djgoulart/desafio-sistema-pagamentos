@@ -27,7 +27,8 @@ class CreditCardPaymentTest extends TestCase
 
         $this->paymentData = new PaymentDto(
             customerId: 'cus_123',
-            value: 123.45
+            value: 123.45,
+            remoteIp: '127.0.0.1'
         );
 
         $this->creditCard = new CreditCard(
@@ -40,7 +41,6 @@ class CreditCardPaymentTest extends TestCase
 
         $this->creditCardHolderInfo = $this->createCreditCardHolderInfo();
 
-        $this->remoteIp = '127.0.0.1';
     }
 
     private function createCreditCardHolderInfo(): CreditCardHolderInfoDto
@@ -56,19 +56,20 @@ class CreditCardPaymentTest extends TestCase
         );
     }
 
-    private function createCreditCardPayment($customerId, $value)
+    private function createCreditCardPayment(string $customerId, float $value)
     {
+       // dd($value, $customerId);
+        $payment = new PaymentDto(customerId: $customerId, value: $value);
         return new CreditCardPayment(
-            payment: new PaymentDto(customerId: $customerId, value: $value),
+            payment: $payment,
             creditCard: $this->creditCard,
             creditCardHolderInfo: $this->creditCardHolderInfo,
-            remoteIp: $this->remoteIp
         );
     }
 
     public function testCreditCardPaymentInitialization()
     {
-        $sut = $this->createCreditCardPayment('cus_123', 123.45);
+        $sut = $this->createCreditCardPayment(customerId:'cus_123', value: 123.45);
 
         $this->assertInstanceOf(CreditCardPayment::class, $sut);
         $this->assertIsArray($sut->getCreditCard());
@@ -81,20 +82,6 @@ class CreditCardPaymentTest extends TestCase
 
         $this->assertEquals('cus_123', $sut->customerId);
         $this->assertEquals(123.45, $sut->value);
-        $this->assertEquals('127.0.0.1', $sut->remoteIp);
-    }
-
-    public function testCreditCardPaymentValidationFailure()
-    {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('Remote IP should not be null');
-
-        new CreditCardPayment(
-            payment: $this->paymentData,
-            creditCard: $this->creditCard,
-            creditCardHolderInfo: $this->creditCardHolderInfo,
-            remoteIp:''
-        );
     }
 
     public function testCreditCardPaymentWithZeroValue()
@@ -106,7 +93,6 @@ class CreditCardPaymentTest extends TestCase
             payment: new PaymentDto(customerId: 'cus_123', value: 0),
             creditCard: $this->creditCard,
             creditCardHolderInfo: $this->creditCardHolderInfo,
-            remoteIp: $this->remoteIp
         );
     }
 
@@ -119,7 +105,6 @@ class CreditCardPaymentTest extends TestCase
             payment: new PaymentDto(customerId: 'cus_123', value: -50),
             creditCard: $this->creditCard,
             creditCardHolderInfo: $this->creditCardHolderInfo,
-            remoteIp: $this->remoteIp
         );
     }
 
@@ -140,7 +125,6 @@ class CreditCardPaymentTest extends TestCase
             payment: $this->paymentData,
             creditCard: $pastCreditCard,
             creditCardHolderInfo: $this->creditCardHolderInfo,
-            remoteIp: $this->remoteIp
         );
     }
 
@@ -161,7 +145,6 @@ class CreditCardPaymentTest extends TestCase
             payment: $this->paymentData,
             creditCard: $invalidCreditCard,
             creditCardHolderInfo: $this->creditCardHolderInfo,
-            remoteIp: $this->remoteIp
         );
     }
 
@@ -174,7 +157,6 @@ class CreditCardPaymentTest extends TestCase
             payment: new PaymentDto(customerId: '', value: 123.45),
             creditCard: $this->creditCard,
             creditCardHolderInfo: $this->creditCardHolderInfo,
-            remoteIp: $this->remoteIp
         );
     }
 

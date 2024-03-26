@@ -65,7 +65,5 @@ class CreditCardPayment extends Payment
     protected function validate()
     {
         parent::validate();
-
-        EntityValidation::notNull($this->remoteIp, 'Remote IP should not be null');
     }
 }
