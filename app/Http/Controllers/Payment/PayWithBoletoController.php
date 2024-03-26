@@ -41,8 +41,6 @@ class PayWithBoletoController extends Controller
             return redirect(route('payment.register'))->with('error', 'Failed to create customer');
         }
 
-        $paymentMethod = PaymentMethods::from($request->input('paymentMethod'));
-
         $paymentData = new PaymentDto(
             customerId: $customer['externalId'],
             value: $request->input('value'),

@@ -15,19 +15,24 @@ use Core\Domain\Enterprise\Entities\Payment;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Services\PaymentService;
+use App\Services\CreditCardPaymentService;
+use Core\Domain\Enterprise\Entities\CreditCardPayment;
+use App\Repositories\CreditCardPaymentEloquentRepository;
 
 class PayWithCreditCardController extends Controller
 {
     protected $paymentProcessor;
     protected $customerService;
+    protected $paymentRepository;
 
     public function __construct(
-        PaymentService $paymentProcessor,
-        CustomerContract $customerService
+        CreditCardPaymentService $paymentProcessor,
+        CustomerContract $customerService,
+        CreditCardPaymentEloquentRepository $paymentRepository
     ) {
         $this->paymentProcessor = $paymentProcessor;
         $this->customerService = $customerService;
+        $this->paymentRepository = $paymentRepository;
     }
 
     public function handle(StorePaymentRequest $request): RedirectResponse
@@ -43,12 +48,12 @@ class PayWithCreditCardController extends Controller
             return redirect(route('payment.register'))->with('error', 'Failed to create customer');
         }
 
-        $paymentMethod = PaymentMethods::from($request->input('paymentMethod'));
-
         $paymentData = new PaymentDto(
             customerId: $customer['externalId'],
             value: $request->input('value'),
             dueDate: $request->input('dueDate'),
+            remoteIp: $request->ip(),
+            paymentMethod: PaymentMethods::CREDIT_CARD->value,
         );
 
         $creditCard = new CreditCardDto(
@@ -69,32 +74,43 @@ class PayWithCreditCardController extends Controller
             phone: $request->input('holderInfoPhone'),
         );
 
-        $paymentDetails = new PaymentDetailsDto(
+        $paymentToPersist = new CreditCardPayment(
             payment: $paymentData,
             creditCard: $creditCard,
             creditCardHolderInfo: $creditCardHolderInfo,
-            remoteIp: $request->ip(),
         );
 
-        $payment = $this->paymentProcessor->processPayment(
-            $request->input('paymentMethod'),
-            $paymentDetails
+        $persistedPayment = $this->paymentRepository->create(payment: $paymentToPersist);
+
+       // dd($persistedPayment);
+
+        $serviceResponse = $this->paymentProcessor->processPayment(
+            payment: $persistedPayment
         );
 
-        if(!$payment) {
-            return redirect(route('payment.register'))->with('error', 'Failed to process payment');
-        }
-
-        //$resultData = $payment->getData();
+        $this->paymentRepository->update(
+            payment: $persistedPayment,
+            data: [
+                'status' => $serviceResponse['status'],
+                'externalId' => $serviceResponse['id'],
+                'invoiceUrl' => $serviceResponse['invoiceUrl'],
+                'transactionReceiptUrl' => $serviceResponse['transactionReceiptUrl'],
+            ]
+        );
 
         return redirect()->route('payment.pay.credit-card.result', [
-            'payment' => $payment
+            'paymentId' => $persistedPayment->id
         ]);
 
     }
 
-    public function result(): Response
+    public function result($paymentId): Response
     {
-        return Inertia::render('Payment/CreditCardResult');
+        $payment = $this->paymentRepository->findById($paymentId);
+       // dd($payment);
+        return Inertia::render('Payment/CreditCardResult', [
+            'invoiceUrl' => $payment['invoiceUrl'],
+            'status' => $payment['status'],
+        ]);
     }
 }

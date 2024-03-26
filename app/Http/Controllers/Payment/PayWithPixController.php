@@ -78,8 +78,6 @@ class PayWithPixController extends Controller
                 ]
             );
 
-
-
         $payment = $this->paymentRepository->findById($persistedPayment->id);
 
         return redirect(route('payment.pay.pix.result', ['paymentId' => $payment->id]));
