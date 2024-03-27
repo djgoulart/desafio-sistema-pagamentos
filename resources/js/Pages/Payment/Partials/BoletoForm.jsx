@@ -24,8 +24,6 @@ export default function BoletoForm() {
         post(route('payment.pay.boleto'));
     };
 
-    useEffect(() => { console.log(errors) }, [errors]);
-
     return (
         <form onSubmit={submit} className='flex flex-col gap-4'>
             <TextInput name={"paymentMethod"} type={"hidden"} value={data.paymentMethod} />

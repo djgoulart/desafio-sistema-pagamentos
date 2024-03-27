@@ -20,11 +20,9 @@ export default function PixForm() {
         e.preventDefault();
 
         setData('paymentMethod', paymentMethod);
-        console.log(data);
+
         post(route('payment.pay.pix'));
     };
-
-    useEffect(() => { console.log(errors) }, [errors]);
 
     return (
         <form onSubmit={submit} className='flex flex-col gap-4'>
