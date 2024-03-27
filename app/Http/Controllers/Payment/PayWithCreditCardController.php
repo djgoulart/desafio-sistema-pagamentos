@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePaymentRequest;
+use App\Http\Requests\CreditCardPaymentRequest;
 use App\Repositories\CreditCardPaymentEloquentRepository;
 use App\Services\CreditCardPaymentService;
 use Core\Domain\Application\Contracts\CustomerContract;
@@ -35,7 +35,7 @@ class PayWithCreditCardController extends Controller
         $this->paymentRepository = $paymentRepository;
     }
 
-    public function handle(StorePaymentRequest $request): RedirectResponse
+    public function handle(CreditCardPaymentRequest $request): RedirectResponse
     {
         $customerData = new CustomerDto(
             name: $request->input('customerName'),
@@ -82,8 +82,6 @@ class PayWithCreditCardController extends Controller
 
         $persistedPayment = $this->paymentRepository->create(payment: $paymentToPersist);
 
-        // dd($persistedPayment);
-
         $serviceResponse = $this->paymentProcessor->processPayment(
             payment: $persistedPayment
         );
@@ -108,7 +106,6 @@ class PayWithCreditCardController extends Controller
     {
         $payment = $this->paymentRepository->findById($paymentId);
 
-        // dd($payment);
         return Inertia::render('Payment/CreditCardResult', [
             'invoiceUrl' => $payment['invoiceUrl'],
             'status' => $payment['status'],

@@ -2,15 +2,9 @@
 
 namespace App\Providers;
 
-use App\Http\Controllers\PayWithBoletoController;
-use App\Repositories\BoletoPaymentEloquentRepository;
-use App\Services\BoletoPaymentService;
 use App\Services\CustomerService;
-use App\Services\PaymentService;
 use App\Services\PixService;
 use Core\Domain\Application\Contracts\CustomerContract;
-use Core\Domain\Application\Contracts\PaymentProcessor;
-use Core\Domain\Application\Contracts\PaymentRepository;
 use Core\Domain\Application\Contracts\PixProcessor;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,17 +15,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //$this->app->bind(PaymentRepository::class, BoletoPaymentEloquentRepository::class);
-
-        /* $this->app->when(PayWithBoletoController::class)
-        ->needs(PaymentProcessor::class)
-        ->give(BoletoPaymentService::class);
-
-        $this->app->when(PayWithBoletoController::class)
-        ->needs(PaymentRepository::class)
-        ->give(BoletoPaymentEloquentRepository::class);
-
-        $this->app->bind(PaymentProcessor::class, PaymentService::class); */
         $this->app->bind(PixProcessor::class, PixService::class);
         $this->app->bind(CustomerContract::class, CustomerService::class);
     }

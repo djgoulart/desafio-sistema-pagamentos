@@ -11,7 +11,6 @@ class CreditCardPaymentService
 {
     public function processPayment(CreditCardPayment $payment)
     {
-        //dd($payment);
         $requestAttributes = [
             'customer' => $payment->customerId,
             'billingType' => PaymentMethods::CREDIT_CARD->value,

@@ -11,7 +11,6 @@ class BoletoPaymentService
 {
     public function processPayment(BoletoPayment $payment)
     {
-        //dd($payment);
         $requestAttributes = [
             'customer' => $payment->customerId,
             'billingType' => PaymentMethods::BOLETO->value,

@@ -10,7 +10,6 @@ class BoletoPaymentEloquentRepository
 {
     public function create(BoletoPayment $payment)
     {
-        // dd($payment);
         $persisted = PaymentModel::create([
             'customerId' => $payment->customerId,
             'value' => number_format($payment->value, 2, '.', ''),
@@ -27,7 +26,6 @@ class BoletoPaymentEloquentRepository
 
     public function update(BoletoPayment $payment, array $data)
     {
-        // dd($payment, $data);
         $updated = PaymentModel::where('id', $payment->id)->update($data);
 
         if ($updated) {
@@ -54,13 +52,8 @@ class BoletoPaymentEloquentRepository
             invoiceUrl: $persisted['invoiceUrl'],
             remoteIp: $persisted['remoteIp'],
         );
-        //dd($data);
 
         return new BoletoPayment(payment: $data, boletoUrl: $persisted['boletoUrl']);
 
-    }
-
-    public function findByExternalId(string $externalId): BoletoPayment
-    {
     }
 }

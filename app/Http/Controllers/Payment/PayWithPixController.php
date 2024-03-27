@@ -41,7 +41,7 @@ class PayWithPixController extends Controller
         );
 
         $customer = $this->customerService->createCustomer($customerData);
-        //dd($customer);
+
         if (! $customer) {
             return redirect(route('payment.register'))->with('error', 'Failed to create customer');
         }
@@ -59,10 +59,8 @@ class PayWithPixController extends Controller
         $persistedPayment = $this->paymentRepository->create(payment: $paymentToPersist);
 
         $serviceResponse = $this->paymentProcessor->processPayment($persistedPayment);
-        // dd($serviceResponse);
 
         $pixDetails = $this->paymentProcessor->getPixData(externalId: $serviceResponse['id']);
-        //dd($pixDetails);
 
         $this->paymentRepository->update(
             payment: $persistedPayment,
@@ -86,7 +84,6 @@ class PayWithPixController extends Controller
     {
         $payment = $this->paymentRepository->findById($paymentId);
 
-        // dd($payment);
         return Inertia::render('Payment/PixResult', [
             'qrCode' => $payment->qrCode,
             'payload' => $payment->payload,

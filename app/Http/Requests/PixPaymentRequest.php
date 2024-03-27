@@ -36,4 +36,20 @@ class PixPaymentRequest extends FormRequest
             'value' => ['required', 'numeric'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'customerName.required' => 'O campo nome é obrigatório',
+            'customerName.min' => 'O campo nome deve ter no mínimo 3 caracteres',
+            'customerName.max' => 'O campo nome deve ter no máximo 100 caracteres',
+            'customerCpfCnpj.required' => 'O campo CPF/CNPJ é obrigatório',
+            'customerCpfCnpj.min' => 'O campo CPF/CNPJ deve ter no minimo 11 caracteres',
+            'customerCpfCnpj.max' => 'O campo CPF/CNPJ deve ter no máximo 14 caracteres',
+            'paymentMethod.required' => 'O campo método de pagamento é obrigatório',
+            'paymentMethod.enum' => 'O campo método de pagamento deve ser um valor válido',
+            'value.required' => 'O campo valor é obrigatório',
+            'value.numeric' => 'O campo valor deve ser um número',
+        ];
+    }
 }

@@ -10,7 +10,6 @@ class PixPaymentEloquentRepository
 {
     public function create(PixPayment $payment)
     {
-        // dd($payment);
         $persisted = PaymentModel::create([
             'customerId' => $payment->customerId,
             'value' => number_format($payment->value, 2, '.', ''),
@@ -26,7 +25,6 @@ class PixPaymentEloquentRepository
 
     public function update(PixPayment $payment, array $data)
     {
-        // dd($payment, $data);
         $updated = PaymentModel::where('id', $payment->id)->update($data);
 
         if ($updated) {
@@ -53,7 +51,6 @@ class PixPaymentEloquentRepository
             invoiceUrl: $persisted['invoiceUrl'],
             remoteIp: $persisted['remoteIp'],
         );
-        //dd($data);
 
         return new PixPayment(
             payment: $data,

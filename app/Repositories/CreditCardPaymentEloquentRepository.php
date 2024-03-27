@@ -9,7 +9,6 @@ class CreditCardPaymentEloquentRepository
 {
     public function create(CreditCardPayment $payment)
     {
-        //dd($payment);
         $persisted = PaymentModel::create([
             'customerId' => $payment->customerId,
             'value' => number_format($payment->value, 2, '.', ''),
@@ -25,7 +24,6 @@ class CreditCardPaymentEloquentRepository
 
     public function update(CreditCardPayment $payment, array $data)
     {
-        // dd($payment, $data);
         $updated = PaymentModel::where('id', $payment->id)->update($data);
 
         if ($updated) {
@@ -44,10 +42,5 @@ class CreditCardPaymentEloquentRepository
         }
 
         return $persisted;
-
-    }
-
-    public function findByExternalId(string $externalId): CreditCardPayment
-    {
     }
 }
