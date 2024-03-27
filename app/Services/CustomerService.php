@@ -72,7 +72,7 @@ class CustomerService implements CustomerContract
 
             $customerFromDomain->setExternalId($persistedCustomer->externalId);
 
-            return $customerFromDomain;
+            return $customerFromDomain->getData();
         }
 
         if ($response->failed()) {
