@@ -1,66 +1,94 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Sobre o Projeto
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Esta é uma aplicação desenvolvida para a realização de um desafio técnico as especificações abaixo:
 
-## About Laravel
+<p><b>Objetivo:</b> O desafio é desenvolver um sistema de processamento de pagamentos integrado ao ambiente de homologação do Asaas, levando em consideração que o cliente deve acessar uma página onde irá selecionar a opção de pagamento entre Boleto, Cartão ou Pix.</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p>Basicamente, o sistema deve ter a opção do pagamento e um formulário com inputs necessários para processar o pagamento e um botão 'finalizar pagamento', e se o pagamento der certo direcionar para uma página de obrigado.</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Regras do Desafio
+- O sistema deverá ser desenvolvido utilizando a linguagem PHP no framework Laravel.
+  - Tratar os Dados no Request da requisição para que não aconteça de vir dados faltando ou diferentes do necessário.
+  - Resposta da solicitação ser padronizada via Resources conforme o necessário.
+  - Padronização das Requisições das APIs de integração com o Asaas.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Processamento de pagamentos com boleto, cartão de crédito e pix.
+  - Se o pagamento for boleto mostrar um botão com o link do boleto na página de obrigado.
+  - Se o pagamento for Pix exibir o QRCode e o Copia e Cola na página de obrigado.
+  - Em caso de recusa do cartão ou erro na requisição mostrar uma mensagem amigável no retorno para facilitar o entendimento do não processamento do pagamento.
 
-## Learning Laravel
+- Não é necessário se importar com a qualidade do front, usar um bootstrap bem básico
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Utilize boas práticas de programação
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Utilize boas práticas de git
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Documentar como rodar o projeto
 
-## Laravel Sponsors
+## Solução do Desafio
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+<img src="https://github.com/djgoulart/desafio-sistema-pagamentos/blob/be467a323b34430bd53e17f9eb2faa878f9e98ce/docs/screen-boleto.png" width="800" />
+<br />
+O projeto foi desenvolvido utilizando uma estrutura análoga ao DDD, um pouco mais enxuta dada a natureza do mesmo. Foram implementados testes unitários para boa parte do código que está relacionado ao Domínio da aplicação. 
 
-### Premium Partners
+### Stack utilizada
+- Php
+- Laravel
+- ReactJS
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Estrutura do Projeto
 
-## Contributing
+- <b>/src:</b> é a pasta que armazena a maior parte do código da aplicação, no intuito de mantê-la desacoplada do Laravel em boa parte dos cenários.
+- <b>/app/Services:</b> Contém os arquivos dos serviços que são responsáveis pela comunicação com a API de pagamentos.
+- <b>/app/Repositories:</b> Contém os arquivos responsáveis pela comunicação com a camada de dados da aplicação, atualmente o Eloquent.
+  - Apesar do nome, essas classes não implementam de fato o pattern repository com injeção e inversão de dependências, pois elas não seguem a implementação de nenhuma interface.
+- <b>/app/Http/Controllers/Payment:</b> Os controllers das rotas de pagamento estão definidos aqui.
+- <b>/app/Http/Requests:</b> Os validadores para as requests de cada endpoint de pagamento estão definidos nessa pasta.
+- <b>/app/Models:</b> Os models da camada de dados aqui.
+- <b>/routes/payment.php:</b> Todas as rotas de pagamento da aplicação estão nesse arquivo.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Como executar a aplicação em ambiente local:
+Para que a aplicação funcione corretamente você precisará de uma chave de autenticação do ambiente SandBox da API Asaas.
 
-## Code of Conduct
+### Requisitos
+- Docker
+- Docker Compose
+- Php 8.2
+- Composer
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Crie um arquivo ```.env``` baseado no arquivo de exemplo ```.env.example``` e adicione sua chave de autenticação da API Asaas juntamente com a URL da api:
 
-## Security Vulnerabilities
+```env
+ASAAS_API_KEY
+ASAAS_API_URL
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Inicialize o projeto utilizando Laravel Sail
+```shell
+./vendor/bin/sail composer install
+```
+```shell
+./vendor/bin/sail up -d
+```
+Crie a estrutura do banco de dados
+```shell
+./vendor/bin/sail artisan migrate
+```
+Hora de buildar os arquivos do frontend
+
+```shell
+pnpm build
+```
+
+Acesse a tela inicial de pagamentos em:
+[http://localhost](http://localhost)
+
+## Rodando os testes
+```shell
+./vendor/bin/sail artisan test
+```
+
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+[MIT license](https://opensource.org/licenses/MIT).
